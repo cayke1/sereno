@@ -5,8 +5,6 @@ import { Brain, HandHeart, HeartPulse } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Hero from "@/components/home/Hero";
 import Features from "@/components/home/Features";
-import FeelingForm from "@/components/feeling-form";
-import Link from "next/link";
 
 export default function Home() {
   const testimonials = [
