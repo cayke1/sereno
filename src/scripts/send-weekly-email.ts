@@ -88,9 +88,9 @@ export async function sendWeeklyEmail(): Promise<boolean> {
 
     // Send email
     const { data, error } = await resend.emails.send({
-      from: emailConfig.from,
+      from: '"Feelings Tracker" <noreply@feelingstracker.com>',
       to: [RECIPIENT_EMAIL],
-      subject: emailConfig.subject,
+      subject: "Your Weekly Feelings Summary",
       html: emailContent,
     });
 
