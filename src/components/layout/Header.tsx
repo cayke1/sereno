@@ -19,7 +19,6 @@ export function Header() {
     { name: "Início", href: "/" },
     { name: "Recursos", href: "/#features" },
     { name: "Sobre", href: "/#about" },
-    { name: "Dashboard", href: "/dashboard" },
   ];
 
   const isActive = (path: string) => {
