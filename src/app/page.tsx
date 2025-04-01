@@ -29,7 +29,7 @@ export default function Home() {
         "Meus pacientes adoram receber os relatórios semanais e se sentem mais engajados no processo terapêutico. A interface é intuitiva e acolhedora.",
       author: "Dra. Lúcia Ferreira",
       role: "Terapeuta",
-      avatar: <HandHeart className="h-12 w-12 text-accent" />,
+      avatar: <HandHeart className="h-12 w-12 text-sand-200" />,
     },
   ];
 

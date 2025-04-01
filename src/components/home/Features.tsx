@@ -33,7 +33,7 @@ export function Features() {
         "Receba e envie relatórios automatizados que resumem o estado emocional semanal de cada paciente.",
       icon: (
         <SendHorizonal
-          className="w-12 h-12 text-accent"
+          className="w-12 h-12 text-sand-500"
           strokeWidth={1.5}
         />
       ),
@@ -60,7 +60,7 @@ export function Features() {
       title: "Insights Personalizados",
       description:
         "Obtenha análises e padrões emocionais para cada paciente, facilitando intervenções precisas.",
-      icon: <Zap className="w-12 h-12 text-accent" strokeWidth={1.5} />,
+      icon: <Zap className="w-12 h-12 text-sand-500" strokeWidth={1.5} />,
       color: "bg-sand-50",
       border: "border-sand-200",
     },
