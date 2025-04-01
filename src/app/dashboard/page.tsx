@@ -1,6 +1,4 @@
-"use client"
 import { Header } from "@/components/layout/Header";
-
 import PatientCard from "@/components/dashboard/PatientCard";
 import EmotionChart from "@/components/dashboard/EmotionChart";
 import {

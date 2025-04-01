@@ -159,14 +159,3 @@ export default function Home() {
     </div>
   );
 }
-
-export function feelingform() {
-  return (
-    <div className="flex items-center justify-center w-full h-screen">
-      <Link href={"/history"} className="absolute top-6 right-2">
-        <Button variant="outline">History Page</Button>
-      </Link>
-      <FeelingForm />
-    </div>
-  );
-}
