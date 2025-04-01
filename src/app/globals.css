@@ -119,4 +119,8 @@
   body {
     @apply bg-background text-foreground;
   }
+  .gradient-heading {
+    @apply bg-gradient-to-r from-[#25ab8c] to-sky-500 bg-clip-text text-transparent;
+  }
+  
 }
