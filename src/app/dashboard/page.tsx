@@ -22,7 +22,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Footer from "@/components/layout/Footer";
 
-export function Dashboard() {
+export default function Page() {
   // Mock data for patients
   const patients = [
     {
@@ -364,5 +364,3 @@ export function Dashboard() {
     </div>
   );
 };
-
-export default Dashboard;

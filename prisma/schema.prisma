@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                         String                       @id @default(uuid())
+  name                       String
+  email                      String                       @unique
+  password                   String
+  role                       Role                         @default(PATIENT)
+  createdAt                  DateTime                     @default(now())
+  updatedAt                  DateTime                     @updatedAt
+  licenseNumber              String?                      @unique
+  stripeCustomerId           String?                      @unique
+  DailyPositiveReinforcement DailyPositiveReinforcement[]
+  feelings                   Feeling[]
+  patients                   ProfessionalPatient[]        @relation("ProfessionalPatients_patient")
+  professionals              ProfessionalPatient[]        @relation("ProfessionalPatients_professional")
+  Subscription               Subscription?
+}
+
+model Subscription {
+  id             String             @id @default(uuid())
+  professionalId String             @unique
+  stripeSubId    String             @unique
+  plan           Plan
+  status         SubscriptionStatus
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  professional   User               @relation(fields: [professionalId], references: [id])
+}
+
+model Feeling {
+  id                  String   @id @default(uuid())
+  mood                String
+  predominant_feeling String
+  description         String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  userId              String
+  user                User     @relation(fields: [userId], references: [id])
+}
+
+model DailyPositiveReinforcement {
+  id            String   @id @default(uuid())
+  positiveThing String
+  conquest      String
+  kindness      String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+}
+
+model ProfessionalPatient {
+  id             String   @id @default(uuid())
+  professionalId String
+  patientId      String
+  createdAt      DateTime @default(now())
+  patient        User     @relation("ProfessionalPatients_patient", fields: [patientId], references: [id])
+  professional   User     @relation("ProfessionalPatients_professional", fields: [professionalId], references: [id])
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  PAST_DUE
+}
+
+enum Plan {
+  BASIC
+  UNLIMITED
+}
+
+enum Role {
+  PATIENT
+  PROFESSIONAL
+}
