@@ -21,12 +21,11 @@ export function Hero() {
               intuitivo e humano.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Link
-                href="/auth/register"
-                className="px-6 py-6 text-white bg-mint-500 hover:bg-mint-600 rounded-full text-lg"
-              >
-                Comece agora
-                <ArrowRight className="ml-2 h-5 w-5" />
+              <Link href="/auth/register">
+                <Button className="px-6 py-6 text-white bg-mint-500 hover:bg-mint-600 rounded-full text-lg">
+                  Comece agora
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
               </Link>
               <Button
                 variant="outline"
