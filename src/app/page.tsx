@@ -112,7 +112,7 @@ export default function Home() {
                 >
                   <div className="mb-6">{testimonial.avatar}</div>
                   <p className="text-foreground/80 mb-6 italic">
-                    `&#34`;{testimonial.quote}`&#34`;
+                    &quot; {testimonial.quote} &quot;
                   </p>
                   <div>
                     <h4 className="font-semibold">{testimonial.author}</h4>
