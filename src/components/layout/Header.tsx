@@ -21,6 +21,7 @@ export function Header() {
     { name: "Início", href: "/" },
     { name: "Recursos", href: "/#features" },
     { name: "Sobre", href: "/#about" },
+    { name: "Planos", href: "/#pricing" },
   ];
 
   const isActive = (path: string) => {
