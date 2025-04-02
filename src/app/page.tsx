@@ -5,6 +5,7 @@ import { Brain, HandHeart, HeartPulse } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Hero from "@/components/home/Hero";
 import Features from "@/components/home/Features";
+import { Pricing } from "@/components/home/Pricing";
 
 export default function Home() {
   const testimonials = [
@@ -123,6 +124,11 @@ export default function Home() {
               ))}
             </div>
           </div>
+        </section>
+
+        {/* Pricing Section */}
+        <section className="py-20 bg-white">
+          <Pricing />
         </section>
 
         {/* CTA Section */}
