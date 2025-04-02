@@ -1,12 +1,14 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/ui/Logo";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useAuth } from "@/lib/contexts/auth-context";
 
 export function Header() {
+  const { user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const path = usePathname();
   const hash = path.includes("#") ? path.substring(path.indexOf("#")) : null;
@@ -34,7 +36,7 @@ export function Header() {
   return (
     <header className="py-4 px-4 md:px-6 w-full bg-white/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
       <div className="container max-w-7xl mx-auto flex justify-between items-center">
-        <Logo withText size="md"/>
+        <Logo withText size="md" />
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8">
@@ -85,9 +87,19 @@ export function Header() {
               </li>
             ))}
             <li>
-              <Button className="w-full bg-mint-500 hover:bg-mint-600 text-white">
-                Login
-              </Button>
+              {user ? (
+                <Link href="/dashboard">
+                  <Button className="w-full bg-mint-500 hover:bg-mint-600 text-white">
+                    Dashboard
+                  </Button>
+                </Link>
+              ) : (
+                <Link href="/auth/login">
+                  <Button className="w-full bg-mint-500 hover:bg-mint-600 text-white">
+                    Login
+                  </Button>
+                </Link>
+              )}
             </li>
           </ul>
         </nav>
