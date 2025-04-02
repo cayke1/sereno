@@ -21,7 +21,6 @@ interface AuthContextType {
     name: string,
     email: string,
     password: string,
-    companyId: string
   ) => Promise<void>;
   logout: () => void;
 }
@@ -117,7 +116,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     name: string,
     email: string,
     password: string,
-    companyId: string
   ) => {
     try {
       setIsLoading(true);
