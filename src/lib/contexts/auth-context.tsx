@@ -93,6 +93,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setToken(response.access_token);
 
         setLocalStorage("access_token", response.access_token);
+        document.cookie = `access_token=${response.access_token}; path=/; max-age=86400; secure;`;
+        document.cookie = `user_role=${response.role}; path=/; max-age=86400; secure;`;
+        document.cookie = `user_id=${response.id}; path=/; max-age=86400; secure;`;
         setLocalStorage(
           "user",
           JSON.stringify({
@@ -103,13 +106,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           })
         );
 
-        console.log("Registro realizado com sucesso:", {
-          id: response.id,
-          name: response.name,
-          email: response.email,
-          role: response.role,
-        });
-        toast.success("Registro realizado com sucesso!");
+        toast.success("Usuário logado com sucesso!");
         if (user && user.role === "PROFESSIONAL") {
           router.push("/dashboard");
         } else if (user && user.role === "PATIENT") {
