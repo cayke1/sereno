@@ -11,14 +11,13 @@ interface RegisterCredentials {
   password: string;
 }
 
-interface AuthResponse {
-  token: string;
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    role: "PATIENT" | "PROFESSIONAL";
-  };
+export interface AuthResponse {
+  access_token: string;
+
+  id: string;
+  name: string;
+  email: string;
+  role: "PATIENT" | "PROFESSIONAL";
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";

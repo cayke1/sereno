@@ -10,15 +10,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Logo from "@/components/ui/Logo";
-import { Eye, EyeOff, LogIn, Mail } from "lucide-react";
+import { Eye, EyeOff, Loader, LogIn, Mail } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/contexts/auth-context";
+import { useRouter } from "next/router";
+import { redirect } from "next/navigation";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Email inválido" }),
@@ -30,8 +32,26 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function Login() {
-  const { login } = useAuth();
+  const { login, user } = useAuth();
+  const [loading, setIsLoading] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      toast.success("Login realizado", {
+        description: "Você já está autenticado.",
+      });
+      setIsLoading(false);
+      // Redirect to the dashboard or home page
+      if (user.role === "PATIENT") {
+        redirect("/patient/dashboard");
+      } else {
+        redirect("/dashboard");
+      }
+    } else {
+      setIsLoading(false);
+    }
+  });
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -54,7 +74,13 @@ export default function Login() {
     }
     // Here you would typically handle authentication
   };
-  return (
+  return  loading ? (
+    <div className="w-full h-full flex items-center justify-center">
+      <div>
+        <Loader className="animate-spin h-10 w-10 text-mint-500" />
+      </div>
+    </div>
+  ) : (
     <div className="min-h-screen flex flex-col">
       <div className="container max-w-lg mx-auto flex-1 flex flex-col items-center justify-center px-4 py-12">
         <div className="w-full bg-white rounded-lg shadow-md p-6 md:p-8 border border-border">

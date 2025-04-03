@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { authService } from "../services/auth";
+import { AuthResponse, authService } from "../services/auth";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -17,11 +17,7 @@ interface AuthContextType {
   token: string | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (
-    name: string,
-    email: string,
-    password: string,
-  ) => Promise<void>;
+  register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -59,7 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Verificar se o usuário está autenticado ao carregar a página
     const loadUserData = () => {
       try {
-        const storedToken = getLocalStorage("token");
+        const storedToken = getLocalStorage("access_token");
         const storedUser = getLocalStorage("user");
 
         if (storedToken && storedUser) {
@@ -71,7 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           } catch (error) {
             console.error("Erro ao analisar dados do usuário:", error);
             // Limpar dados inválidos
-            removeLocalStorage("token");
+            removeLocalStorage("access_token");
             removeLocalStorage("user");
           }
         } else {
@@ -85,25 +81,54 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loadUserData();
   }, []);
 
+  const afterLogin = (response: AuthResponse) => {
+    try {
+      if (response && response.access_token && response.id) {
+        setUser({
+          id: response.id,
+          name: response.name,
+          email: response.email,
+          role: response.role,
+        });
+        setToken(response.access_token);
+
+        setLocalStorage("access_token", response.access_token);
+        setLocalStorage(
+          "user",
+          JSON.stringify({
+            id: response.id,
+            name: response.name,
+            email: response.email,
+            role: response.role,
+          })
+        );
+
+        console.log("Registro realizado com sucesso:", {
+          id: response.id,
+          name: response.name,
+          email: response.email,
+          role: response.role,
+        });
+        toast.success("Registro realizado com sucesso!");
+        if (user && user.role === "PROFESSIONAL") {
+          router.push("/dashboard");
+        } else if (user && user.role === "PATIENT") {
+          router.push("/patient/dashboard");
+        }
+      } else {
+        toast.error("Resposta de registro inválida");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const login = async (email: string, password: string) => {
     try {
       setIsLoading(true);
       const response = await authService.login({ email, password });
 
-      if (response && response.token && response.user) {
-        setUser(response.user);
-        setToken(response.token);
-
-        setLocalStorage("token", response.token);
-        setLocalStorage("user", JSON.stringify(response.user));
-
-        console.log("Login realizado com sucesso:", response.user);
-        toast.success("Login realizado com sucesso!");
-        router.push("/dashboard");
-      } else {
-        console.error("Resposta de login inválida:", response);
-        toast.error("Resposta de login inválida");
-      }
+      afterLogin(response);
     } catch (error) {
       console.error("Erro ao fazer login:", error);
       toast.error("Falha ao fazer login. Verifique suas credenciais.");
@@ -112,11 +137,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const register = async (
-    name: string,
-    email: string,
-    password: string,
-  ) => {
+  const register = async (name: string, email: string, password: string) => {
     try {
       setIsLoading(true);
       const response = await authService.register({
@@ -125,20 +146,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         password,
       });
 
-      if (response && response.token && response.user) {
-        setUser(response.user);
-        setToken(response.token);
-
-        setLocalStorage("token", response.token);
-        setLocalStorage("user", JSON.stringify(response.user));
-
-        console.log("Registro realizado com sucesso:", response.user);
-        toast.success("Registro realizado com sucesso!");
-        router.push("/dashboard");
-      } else {
-        console.error("Resposta de registro inválida:", response);
-        toast.error("Resposta de registro inválida");
-      }
+      afterLogin(response);
     } catch (error) {
       console.error("Erro ao registrar:", error);
       toast.error(
@@ -152,7 +160,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = () => {
     setUser(null);
     setToken(null);
-    removeLocalStorage("token");
+    removeLocalStorage("access_token");
     removeLocalStorage("user");
     console.log("Logout realizado com sucesso");
     router.push("/auth/login");
