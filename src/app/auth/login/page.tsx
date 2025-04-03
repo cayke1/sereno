@@ -19,7 +19,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/contexts/auth-context";
-import { useRouter } from "next/router";
 import { redirect } from "next/navigation";
 
 const loginSchema = z.object({
@@ -68,6 +67,7 @@ export default function Login() {
         description: "Você foi autenticado com sucesso.",
       });
     } catch (error: unknown) {
+      console.error(error);
       toast.error("Falha ao realizar login", {
         description: "Algum erro ocorreu durante o login.",
       });
