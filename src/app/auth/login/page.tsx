@@ -18,17 +18,19 @@ import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useAuth } from "@/lib/contexts/auth-context";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Email inválido" }),
   password: z
     .string()
-    .min(6, { message: "Senha deve ter pelo menos 6 caracteres" }),
+    .min(1, { message: "Senha deve ter pelo menos 6 caracteres" }),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function Login() {
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<LoginFormValues>({
@@ -39,11 +41,17 @@ export default function Login() {
     },
   });
 
-  const onSubmit = (data: LoginFormValues) => {
-    console.log("Login attempt:", data);
-    toast.success("Login realizado", {
-      description: "Você foi autenticado com sucesso.",
-    });
+  const onSubmit = async (data: LoginFormValues) => {
+    try {
+      await login(data.email, data.password);
+      toast.success("Login realizado", {
+        description: "Você foi autenticado com sucesso.",
+      });
+    } catch (error: unknown) {
+      toast.error("Falha ao realizar login", {
+        description: "Algum erro ocorreu durante o login.",
+      });
+    }
     // Here you would typically handle authentication
   };
   return (

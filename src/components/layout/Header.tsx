@@ -55,9 +55,10 @@ export function Header() {
               </li>
             ))}
           </ul>
+          <Link href="/auth/login">
           <Button className="bg-mint-500 hover:bg-mint-600 text-white">
             Login
-          </Button>
+          </Button></Link>
         </nav>
 
         {/* Mobile Menu Button */}
