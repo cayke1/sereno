@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/lib/contexts/auth-context";
 
-export function Header() {
+export function DashboardHeader() {
   const { user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const path = usePathname();
@@ -55,12 +55,6 @@ export function Header() {
               </li>
             ))}
           </ul>
-
-          <Link href="/auth/login">
-            <Button className="bg-mint-500 hover:bg-mint-600 text-white">
-              Login
-            </Button>
-          </Link>
         </nav>
 
         {/* Mobile Menu Button */}
@@ -90,26 +84,9 @@ export function Header() {
                 </Link>
               </li>
             ))}
-            <li>
-              {user ? (
-                <Link href="/dashboard">
-                  <Button className="w-full bg-mint-500 hover:bg-mint-600 text-white">
-                    Dashboard
-                  </Button>
-                </Link>
-              ) : (
-                <Link href="/auth/login">
-                  <Button className="w-full bg-mint-500 hover:bg-mint-600 text-white">
-                    Login
-                  </Button>
-                </Link>
-              )}
-            </li>
           </ul>
         </nav>
       )}
     </header>
   );
 }
-
-export default Header;

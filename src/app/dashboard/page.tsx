@@ -1,4 +1,3 @@
-import { Header } from "@/components/layout/Header";
 import PatientCard from "@/components/dashboard/PatientCard";
 import EmotionChart from "@/components/dashboard/EmotionChart";
 import {
@@ -21,6 +20,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Footer from "@/components/layout/Footer";
+import { DashboardHeader } from "@/components/layout/DashboardHeader";
 
 export default function Page() {
   // Mock data for patients
@@ -86,7 +86,7 @@ export default function Page() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      <DashboardHeader />
 
       <main className="flex-1 bg-mint-50/30 py-8">
         <div className="container max-w-7xl mx-auto px-4 md:px-6">

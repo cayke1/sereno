@@ -1,5 +1,4 @@
 "use client";
-import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -37,9 +36,11 @@ import {
   Loader,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { redirect } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
+import { DashboardHeader } from "@/components/layout/DashboardHeader";
 
-export default function PatientDashboard() {
+export default function PatientInfo() {
+  const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -169,7 +170,7 @@ export default function PatientDashboard() {
     </div>
   ) : (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      <DashboardHeader />
 
       <main className="flex-1 bg-mint-50/30 py-8">
         <div className="container max-w-7xl mx-auto px-4 md:px-6">
