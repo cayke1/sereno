@@ -110,7 +110,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (user && user.role === "PROFESSIONAL") {
           router.push("/dashboard");
         } else if (user && user.role === "PATIENT") {
-          router.push("/patient/dashboard");
+          router.push("/patient/portal");
         }
       } else {
         toast.error("Resposta de registro inválida");
