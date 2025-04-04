@@ -9,6 +9,8 @@ const PUBLIC_ROUTES = [
   "/privacy-policy",
   "/terms",
   "/forgot-password",
+  "/logout",
+  "/invite-link/register",
 ];
 const PROFESSIONAL_ROUTES = ["/dashboard"];
 const PATIENT_ROUTES = ["/patient"];
@@ -18,6 +20,10 @@ export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const accessToken = req.cookies.get("access_token")?.value;
   const userRole = req.cookies.get("user_role")?.value;
+
+  if (pathname.startsWith("/invite-link")) {
+    return NextResponse.next();
+  }
 
   // Se for uma rota pública, deixa passar
   if (PUBLIC_ROUTES.includes(pathname)) {

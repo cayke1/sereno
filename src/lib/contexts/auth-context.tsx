@@ -12,6 +12,10 @@ interface User {
   role: "PATIENT" | "PROFESSIONAL";
 }
 
+interface Patient extends User {
+  professional_id: string;
+}
+
 interface AuthContextType {
   user: User | null;
   token: string | null;
@@ -154,11 +158,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const registerPatient = async () => {};
+
+  const removeCookies = () => {
+    document.cookie =
+      "user_role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; secure;";
+    document.cookie =
+      "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; secure;";
+    document.cookie =
+      "user_id=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; secure;";
+  };
+
   const logout = () => {
+    removeCookies();
     setUser(null);
     setToken(null);
     removeLocalStorage("access_token");
     removeLocalStorage("user");
+    removeLocalStorage("token");
     console.log("Logout realizado com sucesso");
     router.push("/auth/login");
     toast.success("Logout realizado com sucesso!");

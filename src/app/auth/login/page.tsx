@@ -43,7 +43,7 @@ export default function Login() {
       setIsLoading(false);
       // Redirect to the dashboard or home page
       if (user.role === "PATIENT") {
-        redirect("/patient/dashboard");
+        redirect("/patient/portal");
       } else {
         redirect("/dashboard");
       }

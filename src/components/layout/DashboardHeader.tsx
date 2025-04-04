@@ -69,7 +69,7 @@ export function DashboardHeader() {
 
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <nav className="md:hidden py-4 px-4 absolute top-16 left-0 right-0 bg-white border-b border-border shadow-lg animate-fade-in">
+        <nav className="md:hidden min-w-60 py-4 px-4 absolute top-16 right-0 bg-white border-b border-border shadow-lg animate-fade-in">
           <ul className="flex flex-col space-y-4">
             {navItems.map((item) => (
               <li key={item.name}>
