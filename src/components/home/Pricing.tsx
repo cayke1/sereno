@@ -23,38 +23,41 @@ interface Plan {
   description: string;
   features: PlanFeature[];
   isPopular?: boolean;
+  api_name: "BASIC" | "UNLIMITED";
 }
 
-export function Pricing() {
-  const plans: Plan[] = [
-    {
-      name: "Básico",
-      price: 59.99,
-      description:
-        "Ideal para profissionais autônomos iniciando na prática clínica",
-      features: [
-        { included: true, text: "Até 5 pacientes ativos" },
-        { included: true, text: "Monitoramento emocional básico" },
-        { included: true, text: "Comunicação via mensagens" },
-        { included: false, text: "Relatórios avançados" },
-        { included: false, text: "Integração com agenda" },
-      ],
-    },
-    {
-      name: "Ilimitado",
-      price: 259.99,
-      isPopular: true,
-      description: "Para clínicas de grande porte e instituições",
-      features: [
-        { included: true, text: "Pacientes ilimitados" },
-        { included: true, text: "Monitoramento emocional completo" },
-        { included: true, text: "Comunicação via mensagens" },
-        { included: false, text: "Relatórios avançados" },
-        { included: false, text: "Integração com agenda" },
-      ],
-    },
-  ];
+export const plans: Plan[] = [
+  {
+    name: "Básico",
+    api_name: "BASIC",
+    price: 59.99,
+    description:
+      "Ideal para profissionais autônomos iniciando na prática clínica",
+    features: [
+      { included: true, text: "Até 5 pacientes ativos" },
+      { included: true, text: "Monitoramento emocional básico" },
+      { included: true, text: "Comunicação via mensagens" },
+      { included: false, text: "Relatórios avançados" },
+      { included: false, text: "Integração com agenda" },
+    ],
+  },
+  {
+    name: "Ilimitado",
+    api_name: "UNLIMITED",
+    price: 259.99,
+    isPopular: true,
+    description: "Para clínicas de grande porte e instituições",
+    features: [
+      { included: true, text: "Pacientes ilimitados" },
+      { included: true, text: "Monitoramento emocional completo" },
+      { included: true, text: "Comunicação via mensagens" },
+      { included: false, text: "Relatórios avançados" },
+      { included: false, text: "Integração com agenda" },
+    ],
+  },
+];
 
+export function Pricing() {
   return (
     <section id="pricing" className="py-20 bg-white border-t border-border">
       <div className="section-container">

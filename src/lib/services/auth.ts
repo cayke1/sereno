@@ -9,6 +9,7 @@ interface RegisterCredentials {
   name: string;
   email: string;
   password: string;
+  role: "PATIENT" | "PROFESSIONAL";
 }
 
 interface RegisterPatientCredentials extends RegisterCredentials {

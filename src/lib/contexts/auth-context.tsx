@@ -18,7 +18,12 @@ interface AuthContextType {
   token: string | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string) => Promise<void>;
+  register: (
+    name: string,
+    email: string,
+    password: string,
+    role: "PATIENT" | "PROFESSIONAL"
+  ) => Promise<void>;
   logout: () => void;
   registerPatient: (
     name: string,
@@ -115,7 +120,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         toast.success("Usuário logado com sucesso!");
         if (user && user.role === "PROFESSIONAL") {
-          router.push("/dashboard");
+          router.push("/dashboard/select-plan");
         } else if (user && user.role === "PATIENT") {
           router.push("/patient/portal");
         }
@@ -141,13 +146,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const register = async (name: string, email: string, password: string) => {
+  const register = async (
+    name: string,
+    email: string,
+    password: string,
+    role: "PATIENT" | "PROFESSIONAL"
+  ) => {
     try {
       setIsLoading(true);
       const response = await authService.register({
         name,
         email,
         password,
+        role,
       });
 
       afterLogin(response);
@@ -174,6 +185,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         email,
         password,
         professional_id,
+        role: "PATIENT",
       });
 
       afterLogin(response);

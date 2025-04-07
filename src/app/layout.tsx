@@ -6,10 +6,10 @@ import Providers from "./providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Feelings Tracker",
+  title: "Sereno",
   description: "Track your daily feelings and emotions",
   icons: {
-    icon: "../../favico.ico",
+    icon: "./favico.ico",
   },
 };
 
