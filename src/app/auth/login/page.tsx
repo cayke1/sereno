@@ -50,7 +50,7 @@ export default function Login() {
     } else {
       setIsLoading(false);
     }
-  });
+  }, [user]);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -74,7 +74,7 @@ export default function Login() {
     }
     // Here you would typically handle authentication
   };
-  return  loading ? (
+  return loading ? (
     <div className="w-full h-full flex items-center justify-center">
       <div>
         <Loader className="animate-spin h-10 w-10 text-mint-500" />

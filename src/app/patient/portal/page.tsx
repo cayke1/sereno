@@ -5,26 +5,16 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -596,7 +586,7 @@ export default function PatientPortal() {
                                   {record.trigger}
                                 </p>
                                 <p className="text-sm bg-muted p-2 rounded-lg">
-                                  "{record.notes}"
+                                  &quot;{record.notes}&quot;
                                 </p>
                               </div>
 

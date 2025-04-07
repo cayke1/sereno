@@ -5,10 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/ui/Logo";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { useAuth } from "@/lib/contexts/auth-context";
 
 export function DashboardHeader() {
-  const { user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const path = usePathname();
   const hash = path.includes("#") ? path.substring(path.indexOf("#")) : null;
@@ -58,13 +56,13 @@ export function DashboardHeader() {
         </nav>
 
         {/* Mobile Menu Button */}
-        <button
+        <Button
           className="md:hidden text-foreground"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Toggle menu"
         >
           {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        </Button>
       </div>
 
       {/* Mobile Navigation */}

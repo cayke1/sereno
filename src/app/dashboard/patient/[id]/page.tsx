@@ -43,6 +43,8 @@ export default function PatientInfo() {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
 
+  console.log(id);
+
   useEffect(() => {
     setInterval(() => {
       setIsLoading(false);
@@ -517,7 +519,7 @@ export default function PatientInfo() {
                                 {record.trigger}
                               </p>
                               <p className="text-sm bg-muted p-2 rounded-lg">
-                                "{record.notes}"
+                                &quot;{record.notes}&quot;
                               </p>
                             </div>
 
