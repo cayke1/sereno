@@ -23,7 +23,6 @@ import Footer from "@/components/layout/Footer";
 import { DashboardHeader } from "@/components/layout/DashboardHeader";
 
 export default function Page() {
-  // Mock data for patients
   const patients = [
     {
       id: "1",
