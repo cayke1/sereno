@@ -10,10 +10,7 @@ interface User {
   name: string;
   email: string;
   role: "PATIENT" | "PROFESSIONAL";
-}
-
-interface Patient extends User {
-  professional_id: string;
+  professional_id?: string;
 }
 
 interface AuthContextType {
@@ -23,6 +20,12 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
+  registerPatient: (
+    name: string,
+    email: string,
+    password: string,
+    professional_id: string
+  ) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -158,7 +161,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const registerPatient = async () => {};
+  const registerPatient = async (
+    name: string,
+    email: string,
+    password: string,
+    professional_id: string
+  ) => {
+    try {
+      setIsLoading(true);
+      const response = await authService.registerPatient({
+        name,
+        email,
+        password,
+        professional_id,
+      });
+
+      afterLogin(response);
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        "Falha ao criar conta. Verifique os dados e tente novamente."
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const removeCookies = () => {
     document.cookie =
@@ -183,7 +210,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, token, isLoading, login, register, logout }}
+      value={{
+        user,
+        token,
+        isLoading,
+        login,
+        register,
+        logout,
+        registerPatient,
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -11,6 +11,9 @@ interface RegisterCredentials {
   password: string;
 }
 
+interface RegisterPatientCredentials extends RegisterCredentials {
+  professional_id: string;
+}
 export interface AuthResponse {
   access_token: string;
 
@@ -70,6 +73,34 @@ export const authService = {
         toast.error(error.message);
       } else {
         toast.error("Ocorreu um erro durante o registro");
+      }
+      throw error;
+    }
+  },
+
+  async registerPatient(
+    credentials: RegisterPatientCredentials
+  ): Promise<AuthResponse> {
+    try {
+      const response = await fetch(`${API_URL}/auth/register/patient`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Falha no registro do paciente");
+      }
+
+      return await response.json();
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Ocorreu um erro durante o registro do paciente");
       }
       throw error;
     }

@@ -39,8 +39,23 @@ const registerSchema = z.object({
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function Register() {
-  const { register, user: loggedUser } = useAuth();
+  const { registerPatient, user: loggedUser } = useAuth();
   const { professional_id } = useParams();
+  const [showPassword, setShowPassword] = useState(false);
+  useEffect(() => {
+    if (loggedUser) {
+      toast.success("Login realizado", {
+        description: "Você já está autenticado.",
+      });
+      // Redirect to the dashboard or home page
+      if (loggedUser.role === "PATIENT") {
+        window.location.href = "/patient/portal";
+      } else {
+        window.location.href = "/dashboard";
+      }
+    }
+  });
+
   if (!professional_id) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center">
@@ -53,13 +68,14 @@ export default function Register() {
       </div>
     );
   }
-  const [showPassword, setShowPassword] = useState(false);
 
   const {
     data: user,
     isLoading,
     error,
+    // eslint-disable-next-line react-hooks/rules-of-hooks
   } = useGetUser(professional_id?.toString());
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -74,8 +90,12 @@ export default function Register() {
 
   const onSubmit = async (data: RegisterFormValues) => {
     try {
-      // register user
-      // accept invite
+      await registerPatient(
+        data.name,
+        data.email,
+        data.password,
+        data.professional_id
+      );
       toast.success("Cadastro realizado", {
         description: "Você foi registrado com sucesso.",
       });
@@ -87,20 +107,6 @@ export default function Register() {
       });
     }
   };
-
-  useEffect(() => {
-    if (loggedUser) {
-      toast.success("Login realizado", {
-        description: "Você já está autenticado.",
-      });
-      // Redirect to the dashboard or home page
-      if (loggedUser.role === "PATIENT") {
-        window.location.href = "/patient/portal";
-      } else {
-        window.location.href = "/dashboard";
-      }
-    }
-  });
 
   return isLoading || error ? (
     <div className="w-full h-[100vh] flex items-center justify-center">
