@@ -75,10 +75,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           try {
             const parsedUser = JSON.parse(storedUser);
             setUser(parsedUser);
-            console.log("Usuário carregado do localStorage:", parsedUser);
           } catch (error) {
-            console.error("Erro ao analisar dados do usuário:", error);
-            // Limpar dados inválidos
+            console.error("Erro ao analisar os dados do usuário:", error);
             removeLocalStorage("access_token");
             removeLocalStorage("user");
           }

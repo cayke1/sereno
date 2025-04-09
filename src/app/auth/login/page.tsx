@@ -19,7 +19,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/contexts/auth-context";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Email inválido" }),
@@ -31,6 +31,7 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function Login() {
+  const { push: redirect } = useRouter();
   const { login, user } = useAuth();
   const [loading, setIsLoading] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
