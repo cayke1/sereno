@@ -47,6 +47,7 @@ import {
 import { useState } from "react";
 import { DashboardHeader } from "@/components/layout/DashboardHeader";
 import { redirect } from "next/navigation";
+import { emotion, emotionLabels } from "@/@types/feelings";
 
 // Form schemas for validation
 const profileFormSchema = z.object({
@@ -63,9 +64,9 @@ const profileFormSchema = z.object({
     .min(2, { message: "Profissão deve ter pelo menos 2 caracteres." }),
 });
 
-const emotionFormSchema = z.object({
-  emotion: z.string().min(1, { message: "Escolha uma emoção." }),
-  intensity: z.string().min(1, { message: "Defina a intensidade." }),
+const feelingFormSchema = z.object({
+  emotion: z.nativeEnum(emotion),
+  intensity: z.number().min(1, { message: "Defina a intensidade." }),
   trigger: z.string().min(3, { message: "Descreva o gatilho." }),
   notes: z
     .string()
@@ -73,7 +74,7 @@ const emotionFormSchema = z.object({
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
-type EmotionFormValues = z.infer<typeof emotionFormSchema>;
+type FeelingFormValues = z.infer<typeof feelingFormSchema>;
 
 export default function PatientPortal() {
   const [emotionDialogOpen, setEmotionDialogOpen] = useState(false);
@@ -95,7 +96,7 @@ export default function PatientPortal() {
       date: "20/06/2023",
       time: "20:15",
       emotion: "Alegria",
-      intensity: "8",
+      intensity: 8,
       trigger: "Promoção no trabalho",
       notes: "Me senti valorizado e reconhecido pelo meu esforço.",
     },
@@ -103,7 +104,7 @@ export default function PatientPortal() {
       date: "19/06/2023",
       time: "08:30",
       emotion: "Ansiedade",
-      intensity: "6",
+      intensity: 6,
       trigger: "Reunião importante",
       notes: "Preocupação com a apresentação do projeto.",
     },
@@ -111,7 +112,7 @@ export default function PatientPortal() {
       date: "18/06/2023",
       time: "22:00",
       emotion: "Calma",
-      intensity: "7",
+      intensity: 7,
       trigger: "Meditação noturna",
       notes: "A prática de respiração ajudou a acalmar os pensamentos.",
     },
@@ -130,11 +131,11 @@ export default function PatientPortal() {
   });
 
   // Form for adding emotional records
-  const emotionForm = useForm<EmotionFormValues>({
-    resolver: zodResolver(emotionFormSchema),
+  const emotionForm = useForm<FeelingFormValues>({
+    resolver: zodResolver(feelingFormSchema),
     defaultValues: {
-      emotion: "",
-      intensity: "",
+      emotion: emotion.NON_SPECIFIC,
+      intensity: 1,
       trigger: "",
       notes: "",
     },
@@ -157,7 +158,7 @@ export default function PatientPortal() {
   }
 
   // Function to handle emotion form submission
-  function onEmotionSubmit(data: EmotionFormValues) {
+  function onEmotionSubmit(data: FeelingFormValues) {
     const today = new Date();
     const date = today.toLocaleDateString("pt-BR");
     const time = today.toLocaleTimeString("pt-BR", {
@@ -444,21 +445,11 @@ export default function PatientPortal() {
                                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                       {...field}
                                     >
-                                      <option value="">
-                                        Selecione uma emoção
-                                      </option>
-                                      <option value="Alegria">Alegria</option>
-                                      <option value="Tristeza">Tristeza</option>
-                                      <option value="Raiva">Raiva</option>
-                                      <option value="Medo">Medo</option>
-                                      <option value="Ansiedade">
-                                        Ansiedade
-                                      </option>
-                                      <option value="Calma">Calma</option>
-                                      <option value="Frustração">
-                                        Frustração
-                                      </option>
-                                      <option value="Surpresa">Surpresa</option>
+                                      {Object.values(emotion).map((emotion) => (
+                                        <option key={emotion} value={emotion}>
+                                          {emotionLabels[emotion]}
+                                        </option>
+                                      ))}
                                     </select>
                                   </FormControl>
                                   <FormMessage />
@@ -482,10 +473,7 @@ export default function PatientPortal() {
                                       </option>
                                       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(
                                         (num) => (
-                                          <option
-                                            key={num}
-                                            value={num.toString()}
-                                          >
+                                          <option key={num} value={num}>
                                             {num}
                                           </option>
                                         )

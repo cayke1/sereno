@@ -37,14 +37,6 @@ export function DashboardHeader() {
           href: "/patient/portal",
         },
         {
-          name: "Relatório Diário",
-          href: "/patient/portal/daily-feeling-report",
-        },
-        {
-          name: "Relatório Semanal",
-          href: "/patient/portal/weekly-feeling-report",
-        },
-        {
           name: "Configurações",
           href: "/patient/portal/settings",
         },
