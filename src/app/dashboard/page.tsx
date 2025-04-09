@@ -6,7 +6,6 @@ import {
   Plus,
   Search,
   Smile,
-  UserPlus,
   Users,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -21,6 +20,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Footer from "@/components/layout/Footer";
 import { DashboardHeader } from "@/components/layout/DashboardHeader";
+import { ModalInvitePatient } from "@/components/dashboard/ModalInvitePatient";
 
 export default function Page() {
   const patients = [
@@ -107,10 +107,7 @@ export default function Page() {
                   placeholder="Buscar pacientes..."
                 />
               </div>
-              <Button className="bg-mint-500 hover:bg-mint-600 text-white">
-                <UserPlus className="h-4 w-4 mr-2" />
-                Novo Paciente
-              </Button>
+              <ModalInvitePatient />
             </div>
           </div>
 
@@ -184,16 +181,23 @@ export default function Page() {
                 <CardContent className="pt-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {patients.map((patient) => (
-                      <PatientCard key={patient.id} patient={{
-                        avatar: patient.avatar,
-                        name: patient.name,
-                        lastSession: patient.lastSession,
-                        nextSession: patient.nextSession,
-                        emotionScore: patient.emotionScore,
-                        status: patient.status,
-                        trends: patient.trends as ("up" | "down" | "stable")[],
-                        id: patient.id,
-                      }} />
+                      <PatientCard
+                        key={patient.id}
+                        patient={{
+                          avatar: patient.avatar,
+                          name: patient.name,
+                          lastSession: patient.lastSession,
+                          nextSession: patient.nextSession,
+                          emotionScore: patient.emotionScore,
+                          status: patient.status,
+                          trends: patient.trends as (
+                            | "up"
+                            | "down"
+                            | "stable"
+                          )[],
+                          id: patient.id,
+                        }}
+                      />
                     ))}
                     <div className="card-base flex flex-col items-center justify-center min-h-52 border-dashed">
                       <Button
@@ -362,4 +366,4 @@ export default function Page() {
       <Footer />
     </div>
   );
-};
+}
