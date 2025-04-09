@@ -31,8 +31,6 @@ a {
   }
 }
 
-
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -89,8 +87,6 @@ a {
   }
 }
 
-
-
 @layer base {
   * {
     @apply border-border;
@@ -98,12 +94,12 @@ a {
 
   html {
     scroll-behavior: smooth;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
   }
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
   }
 
   /* Custom reusable components */
@@ -125,5 +121,10 @@ a {
 
   .card-base {
     @apply bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-border p-6;
+  }
+
+  .required-label::after {
+    content: " *";
+    color: red;
   }
 }

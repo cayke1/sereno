@@ -44,10 +44,15 @@ import {
   Plus,
   Download,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DashboardHeader } from "@/components/layout/DashboardHeader";
 import { redirect } from "next/navigation";
-import { emotion, emotionLabels } from "@/@types/feelings";
+import { emotion, emotionLabels, Feeling } from "@/@types/feelings";
+import { feelingService } from "@/lib/services/patient/feeling";
+import { useAuth } from "@/lib/contexts/auth-context";
+import { useGetFeelings } from "@/lib/hooks/feelings/useGetFeelings";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { formatDate } from "@/lib/formatDate";
 
 // Form schemas for validation
 const profileFormSchema = z.object({
@@ -66,17 +71,16 @@ const profileFormSchema = z.object({
 
 const feelingFormSchema = z.object({
   emotion: z.nativeEnum(emotion),
-  intensity: z.number().min(1, { message: "Defina a intensidade." }),
-  trigger: z.string().min(3, { message: "Descreva o gatilho." }),
-  notes: z
-    .string()
-    .min(5, { message: "Adicione mais detalhes sobre como se sentiu." }),
+  intensity: z.string().min(1, { message: "Defina a intensidade." }),
+  trigger: z.string().optional(),
+  description: z.string().optional(),
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 type FeelingFormValues = z.infer<typeof feelingFormSchema>;
 
 export default function PatientPortal() {
+  const { user } = useAuth();
   const [emotionDialogOpen, setEmotionDialogOpen] = useState(false);
 
   // Mock patient data (in a real app, this would come from an API/backend)
@@ -90,34 +94,19 @@ export default function PatientPortal() {
     nextSession: "29 de Junho, 2023, 14:00",
   });
 
-  // Mock emotional records
-  const [emotionalRecords, setEmotionalRecords] = useState([
-    {
-      date: "20/06/2023",
-      time: "20:15",
-      emotion: "Alegria",
-      intensity: 8,
-      trigger: "Promoção no trabalho",
-      notes: "Me senti valorizado e reconhecido pelo meu esforço.",
-    },
-    {
-      date: "19/06/2023",
-      time: "08:30",
-      emotion: "Ansiedade",
-      intensity: 6,
-      trigger: "Reunião importante",
-      notes: "Preocupação com a apresentação do projeto.",
-    },
-    {
-      date: "18/06/2023",
-      time: "22:00",
-      emotion: "Calma",
-      intensity: 7,
-      trigger: "Meditação noturna",
-      notes: "A prática de respiração ajudou a acalmar os pensamentos.",
-    },
-  ]);
+  const userId = user?.id;
 
+  const { data: feelingsData, isLoading } = useGetFeelings(
+    userId ? userId : ""
+  );
+
+  const [feelingRecords, setFeelingRecords] = useState<Feeling[]>([]);
+
+  useEffect(() => {
+    if (feelingsData && Array.isArray(feelingsData)) {
+      setFeelingRecords(feelingsData);
+    }
+  }, [feelingsData]);
   // Form for profile updating
   const profileForm = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -135,9 +124,9 @@ export default function PatientPortal() {
     resolver: zodResolver(feelingFormSchema),
     defaultValues: {
       emotion: emotion.NON_SPECIFIC,
-      intensity: 1,
+      intensity: "1",
       trigger: "",
-      notes: "",
+      description: "",
     },
   });
 
@@ -158,33 +147,28 @@ export default function PatientPortal() {
   }
 
   // Function to handle emotion form submission
-  function onEmotionSubmit(data: FeelingFormValues) {
-    const today = new Date();
-    const date = today.toLocaleDateString("pt-BR");
-    const time = today.toLocaleTimeString("pt-BR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  async function onEmotionSubmit(data: FeelingFormValues) {
+    try {
+      const res = await feelingService.createFeeling({
+        ...data,
+        intensity: parseInt(data.intensity),
+        userId: user!.id,
+        createdAt: new Date().toISOString(),
+      });
+      toast.success("Registro emocional adicionado");
+      console.log(res);
+    } catch (error) {
+      toast.error("Erro ao adicionar registro emocional");
+      console.error(error);
+    }
 
-    const newRecord = {
-      date,
-      time,
-      emotion: data.emotion,
-      intensity: data.intensity,
-      trigger: data.trigger,
-      notes: data.notes,
-    };
-
-    setEmotionalRecords([newRecord, ...emotionalRecords]);
     setEmotionDialogOpen(false);
     emotionForm.reset();
-
-    toast("Registro emocional adicionado", {
-      description: "Seu registro emocional foi salvo com sucesso.",
-    });
   }
 
-  return (
+  return isLoading ? (
+    <LoadingScreen />
+  ) : (
     <div className="flex flex-col min-h-screen">
       <DashboardHeader />
 
@@ -439,7 +423,9 @@ export default function PatientPortal() {
                               name="emotion"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Emoção</FormLabel>
+                                  <FormLabel className="required-label">
+                                    Emoção
+                                  </FormLabel>
                                   <FormControl>
                                     <select
                                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -462,7 +448,9 @@ export default function PatientPortal() {
                               name="intensity"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Intensidade (1-10)</FormLabel>
+                                  <FormLabel className="required-label">
+                                    Intensidade (1-10)
+                                  </FormLabel>
                                   <FormControl>
                                     <select
                                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -504,7 +492,7 @@ export default function PatientPortal() {
 
                             <FormField
                               control={emotionForm.control}
-                              name="notes"
+                              name="description"
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel>Detalhes</FormLabel>
@@ -535,7 +523,7 @@ export default function PatientPortal() {
                   </div>
 
                   <div className="space-y-4">
-                    {emotionalRecords.length === 0 ? (
+                    {feelingRecords && feelingRecords.length === 0 ? (
                       <div className="text-center py-10">
                         <p className="text-muted-foreground">
                           Você ainda não tem registros emocionais.
@@ -550,7 +538,8 @@ export default function PatientPortal() {
                         </Button>
                       </div>
                     ) : (
-                      emotionalRecords.map((record, index) => (
+                      feelingRecords &&
+                      feelingRecords.map((record, index) => (
                         <Card
                           key={index}
                           className="bg-white hover:shadow-md transition-shadow"
@@ -559,7 +548,7 @@ export default function PatientPortal() {
                             <div className="flex justify-between items-start">
                               <div>
                                 <p className="text-sm text-muted-foreground">
-                                  {record.date} • {record.time}
+                                  {formatDate(record.createdAt)}
                                 </p>
                                 <div className="flex items-center gap-2 my-1">
                                   <h4 className="font-medium">
@@ -569,24 +558,30 @@ export default function PatientPortal() {
                                     Intensidade: {record.intensity}/10
                                   </div>
                                 </div>
-                                <p className="text-sm mb-2">
-                                  <span className="font-medium">Gatilho:</span>{" "}
-                                  {record.trigger}
-                                </p>
-                                <p className="text-sm bg-muted p-2 rounded-lg">
-                                  &quot;{record.notes}&quot;
-                                </p>
+                                {record.trigger && (
+                                  <p className="text-sm mb-2">
+                                    <span className="font-medium">
+                                      Gatilho:
+                                    </span>{" "}
+                                    {record.trigger}
+                                  </p>
+                                )}
+                                {record.description && (
+                                  <p className="text-sm bg-muted p-2 rounded-lg">
+                                    &quot;{record.description}&quot;
+                                  </p>
+                                )}
                               </div>
 
                               <div
                                 className={`h-10 w-10 rounded-full flex items-center justify-center ${
-                                  record.emotion === "Alegria"
+                                  record.emotion === emotion.JOY
                                     ? "bg-green-100 text-green-700"
-                                    : record.emotion === "Calma"
+                                    : record.emotion === emotion.CALM
                                       ? "bg-mint-100 text-mint-700"
-                                      : record.emotion === "Ansiedade"
+                                      : record.emotion === emotion.ANXIETY
                                         ? "bg-amber-100 text-amber-700"
-                                        : record.emotion === "Frustração"
+                                        : record.emotion === emotion.FRUSTRATION
                                           ? "bg-red-100 text-red-700"
                                           : "bg-sky-100 text-sky-700"
                                 }`}
