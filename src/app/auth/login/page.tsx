@@ -51,7 +51,7 @@ export default function Login() {
     } else {
       setIsLoading(false);
     }
-  }, [user]);
+  }, [user, redirect]);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),

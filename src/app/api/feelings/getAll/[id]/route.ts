@@ -3,10 +3,10 @@ import { responseError } from "@/lib/responseError";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
-  _request: NextRequest,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await params;
 
   if (!id) {
     return responseError(400, "Missing user ID");
