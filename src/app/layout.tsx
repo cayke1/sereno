@@ -8,9 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Sereno",
   description: "Track your daily feelings and emotions",
-  icons: {
-    icon: "./favico.ico",
-  },
+  icons: [{ url: "/favicon.ico", sizes: "any", type: "image/x-icon" }],
 };
 
 export default function RootLayout({
