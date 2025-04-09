@@ -5,22 +5,69 @@ import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/ui/Logo";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useAuth } from "@/lib/contexts/auth-context";
 
 export function DashboardHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user } = useAuth();
   const path = usePathname();
   const hash = path.includes("#") ? path.substring(path.indexOf("#")) : null;
   const location = {
     pathname: path,
     hash: hash,
   };
-
-  const navItems = [
+  const defaultNavItems = [
+    {
+      name: "Sair",
+      href: "/logout",
+    },
+  ];
+  let customNavItems = [
     { name: "Início", href: "/" },
     { name: "Recursos", href: "/#features" },
     { name: "Sobre", href: "/#about" },
-    { name: "Planos", href: "/#pricing" },
+    { name: "Configurações", href: "/dashboard/config" },
   ];
+
+  if (user) {
+    if (user.role === "PATIENT") {
+      customNavItems = [
+        {
+          name: "Início",
+          href: "/patient/portal",
+        },
+        {
+          name: "Relatório Diário",
+          href: "/patient/portal/daily-feeling-report",
+        },
+        {
+          name: "Relatório Semanal",
+          href: "/patient/portal/weekly-feeling-report",
+        },
+        {
+          name: "Configurações",
+          href: "/patient/portal/settings",
+        },
+      ];
+    } else {
+      customNavItems = [
+        {
+          name: "Início",
+          href: "/dashboard",
+        },
+        {
+          name: "Pacientes",
+          href: "/dashboard/patients",
+        },
+        {
+          name: "Configurações",
+          href: "/dashboard/config",
+        },
+      ];
+    }
+  }
+
+  const navItems = customNavItems.concat(defaultNavItems);
 
   const isActive = (path: string) => {
     if (path.includes("#")) {
