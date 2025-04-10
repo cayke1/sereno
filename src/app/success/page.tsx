@@ -38,9 +38,6 @@ export default function Success() {
             >
               <Link href="/dashboard">Acessar Dashboard</Link>
             </Button>
-            <Button asChild variant="outline" className="w-full sm:w-auto">
-              <Link href="/patient-portal">Portal do Paciente</Link>
-            </Button>
           </CardFooter>
         </Card>
       </main>
