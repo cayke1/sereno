@@ -12,7 +12,8 @@ const PUBLIC_ROUTES = [
   "/logout",
   "/invite-link/register",
   "/use-terms",
-  "/privacy-terms"
+  "/privacy-terms",
+  "/success",
 ];
 const PROFESSIONAL_ROUTES = ["/dashboard"];
 const PATIENT_ROUTES = ["/patient"];
