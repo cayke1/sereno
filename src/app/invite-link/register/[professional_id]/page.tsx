@@ -222,10 +222,10 @@ export default function Register() {
                       <p className="text-sm font-normal">
                         Eu concordo com os{" "}
                         <Link
-                          href="/terms"
+                          href="/use-terms"
                           className="text-mint-500 hover:text-mint-700"
                         >
-                          termos de serviço
+                          termos de uso
                         </Link>{" "}
                         e{" "}
                         <Link

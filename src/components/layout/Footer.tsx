@@ -20,8 +20,8 @@ export function Footer() {
       links: [
         { name: "Ajuda", href: "/#" },
         { name: "Contato", href: "/#" },
-        { name: "Privacidade", href: "/#" },
-        { name: "Termos", href: "/#" },
+        { name: "Privacidade", href: "/privacy-policy" },
+        { name: "Termos", href: "/use-terms" },
       ],
     },
     {

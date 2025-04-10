@@ -11,6 +11,8 @@ const PUBLIC_ROUTES = [
   "/forgot-password",
   "/logout",
   "/invite-link/register",
+  "/use-terms",
+  "/privacy-terms"
 ];
 const PROFESSIONAL_ROUTES = ["/dashboard"];
 const PATIENT_ROUTES = ["/patient"];
