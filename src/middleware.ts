@@ -21,7 +21,6 @@ const PATIENT_ROUTES = ["/patient"];
 export function middleware(req: NextRequest) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
   const { pathname } = req.nextUrl;
-  const accessToken = req.cookies.get("access_token")?.value;
   const userRole = req.cookies.get("user_role")?.value;
 
   if (pathname.startsWith("/invite-link")) {
@@ -34,7 +33,8 @@ export function middleware(req: NextRequest) {
   }
 
   // Se não tiver token, manda pro login
-  if (!accessToken || !userRole) {
+  if (!userRole) {
+    console.log("Sem token ou role, redirecionando para o login");
     return NextResponse.redirect(new URL("/", baseUrl));
   }
 

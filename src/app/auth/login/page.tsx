@@ -41,11 +41,11 @@ export default function Login() {
       toast.success("Login realizado", {
         description: "Você já está autenticado.",
       });
-      setIsLoading(false);
       // Redirect to the dashboard or home page
       if (user.role === "PATIENT") {
         redirect("/patient/portal");
-      } else {
+      } 
+      if(user.role === "PROFESSIONAL") {
         redirect("/dashboard");
       }
     } else {

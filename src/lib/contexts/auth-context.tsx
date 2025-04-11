@@ -91,7 +91,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loadUserData();
   }, []);
 
-  const afterLogin = (response: AuthResponse) => {
+  const afterLogin = async (response: AuthResponse) => {
     try {
       if (response && response.access_token && response.id) {
         setUser({
@@ -103,9 +103,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setToken(response.access_token);
 
         setLocalStorage("access_token", response.access_token);
-        document.cookie = `access_token=${response.access_token}; path=/; max-age=86400; secure;`;
-        document.cookie = `user_role=${response.role}; path=/; max-age=86400; secure;`;
-        document.cookie = `user_id=${response.id}; path=/; max-age=86400; secure;`;
+        await fetch("/api/auth/setCookies", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            access_token: response.access_token,
+            user_id: response.id,
+            user_role: response.role,
+          }),
+        }).then((res) => {
+          if (!res.ok) {
+            throw new Error("Falha ao definir cookies");
+          }
+        });
         setLocalStorage(
           "user",
           JSON.stringify({
@@ -135,7 +147,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsLoading(true);
       const response = await authService.login({ email, password });
 
-      afterLogin(response);
+      await afterLogin(response);
     } catch (error) {
       console.error("Erro ao fazer login:", error);
       toast.error("Falha ao fazer login. Verifique suas credenciais.");
@@ -159,7 +171,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         role,
       });
 
-      afterLogin(response);
+      await afterLogin(response);
     } catch (error) {
       console.error("Erro ao registrar:", error);
       toast.error(
