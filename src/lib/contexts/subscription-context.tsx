@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 interface SubscriptionContextType {
   isLoading: boolean;
-  handleCheckout(plan: "BASIC" | "UNLIMITED"): Promise<void>;
+  handleCheckout(plan: "basic" | "unlimited"): Promise<void>;
 }
 
 const SubscriptionContext = createContext<SubscriptionContextType | undefined>(
@@ -21,7 +21,7 @@ export function SubscriptionProvider({
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
-  const handleCheckout = async (plan: "BASIC" | "UNLIMITED") => {
+  const handleCheckout = async (plan: "basic" | "unlimited") => {
     setIsLoading(true);
     toast.loading("Processando link de checkout...");
     try {

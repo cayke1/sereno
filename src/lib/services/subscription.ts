@@ -6,7 +6,7 @@ interface CheckoutResponse {
     checkout_url: string;
 }
 export const subscriptionService = {
-  async checkout(plan: "BASIC" | "UNLIMITED"): Promise<CheckoutResponse> {
+  async checkout(plan: "basic" | "unlimited"): Promise<CheckoutResponse> {
     try {
       const response = await fetch(`${API_URL}/subscription/checkout`, {
         method: "POST",

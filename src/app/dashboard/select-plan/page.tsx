@@ -21,7 +21,7 @@ export default function SelectPlan() {
 
   const handlePlanSelection = async (plan: "BASIC" | "UNLIMITED") => {
     try {
-      await handleCheckout(plan);
+      await handleCheckout(plan.toLocaleLowerCase() as "basic" | "unlimited");
     } catch (error) {
       toast.error("Ocorreu um erro ao processar o pagamento.");
       console.error("Erro ao processar o pagamento:", error);
