@@ -28,16 +28,14 @@ const profileFormSchema = z.object({
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
-export function ProfileSettings() {
+interface DefaultValues {
+    name?: string;
+    email?: string;
+    title?: string;
+    specialty?: string;
+}
+export function ProfileSettings(defaultValues: DefaultValues) {
   const [isLoading, setIsLoading] = useState(false);
-
-  // Mock user data - in a real app, this would come from your auth context
-  const defaultValues: ProfileFormValues = {
-    name: "Dr. Ana Silva",
-    email: "ana.silva@exemplo.com",
-    title: "Psicóloga",
-    specialty: "Terapia Cognitivo-Comportamental",
-  };
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),

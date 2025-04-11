@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { AlertCircle, CheckCircle2, CreditCard, Shield } from "lucide-react";
 import {
   Card,
@@ -21,21 +21,57 @@ import {
 } from "../ui/dialog";
 import { Badge } from "../ui/badge";
 import { toast } from "sonner";
+import { useEffect, useState } from "react";
+import { LoadingScreen } from "../ui/LoadingScreen";
+import { Plan, plans } from "../home/Pricing";
 
-export function SubscriptionSettings() {
-  const subscription = {
-    plan: "Profissional",
-    status: "active",
-    nextBillingDate: new Date("2025-05-15"),
-    price: 119.99,
-    features: [
-      "Até 30 pacientes ativos",
-      "Monitoramento emocional avançado",
-      "Comunicação via mensagens e vídeo",
-      "Relatórios avançados",
-      "Integração com agenda",
-    ],
+interface SubscriptionSettingsProps {
+  professional_id: string;
+}
+
+interface Subscription {
+  id: string;
+  plan: string;
+  status: string;
+  price: number;
+  createdAt: string;
+  updatedAt: string;
+}
+export function SubscriptionSettings({
+  professional_id,
+}: SubscriptionSettingsProps) {
+  const [isLoading, setIsLoading] = useState(true);
+  const [subscription, setSubscription] = useState<Subscription | null>(null);
+  const [plan, setPlan] = useState<Plan | null>();
+
+  const fetchSubscription = async (id: string) => {
+    const res = await fetch(`/api/subscription/get/${id}`);
+    if (!res.ok) {
+      throw new Error("Erro ao buscar assinatura");
+    }
+    const data = await res.json();
+    const subData = {
+      ...data,
+      price: data.plan === "BASIC" ? 59.99 : 259.99,
+    };
+    const planData = plans.find((p) => p.api_name === subData.plan);
+    if (!planData) {
+      throw new Error("Plano não encontrado");
+    }
+    setPlan(planData);
+    setSubscription(subData);
+    setIsLoading(false);
+    console.log(data);
+    return data;
   };
+
+  useEffect(() => {
+    try {
+      fetchSubscription(professional_id);
+    } catch (error: unknown) {
+      console.log(error);
+    }
+  }, [isLoading]);
 
   const handleCancelSubscription = () => {
     // In a real app, this would call your backend to cancel the subscription
@@ -52,7 +88,9 @@ export function SubscriptionSettings() {
         "Você será redirecionado para atualizar suas informações de pagamento.",
     });
   };
-  return (
+  return isLoading || !subscription ? (
+    <LoadingScreen />
+  ) : (
     <div>
       <h2 className="text-xl font-semibold mb-6">Detalhes da Assinatura</h2>
 
@@ -61,8 +99,8 @@ export function SubscriptionSettings() {
           <Card>
             <CardHeader className="pb-3">
               <div className="flex justify-between items-center">
-                <CardTitle>Plano {subscription.plan}</CardTitle>
-                {subscription.status === "active" ? (
+                <CardTitle>Plano {plan?.name}</CardTitle>
+                {subscription.status === "ACTIVE" ? (
                   <Badge className="bg-green-500">Ativo</Badge>
                 ) : (
                   <Badge variant="destructive">Inativo</Badge>
@@ -76,7 +114,7 @@ export function SubscriptionSettings() {
                     Próxima cobrança
                   </span>
                   <span className="font-medium">
-                    {formatDate(subscription.nextBillingDate)}
+                    {formatDate(subscription.createdAt)}
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -151,10 +189,10 @@ export function SubscriptionSettings() {
             </CardHeader>
             <CardContent>
               <ul className="space-y-2">
-                {subscription.features.map((feature, index) => (
+                {plan?.features.map((feature, index) => (
                   <li key={index} className="flex items-start">
                     <CheckCircle2 className="mr-2 h-4 w-4 text-mint-500 mt-0.5" />
-                    <span className="text-sm">{feature}</span>
+                    <span className="text-sm">{feature.text}</span>
                   </li>
                 ))}
               </ul>

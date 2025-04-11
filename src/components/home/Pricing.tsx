@@ -17,7 +17,7 @@ interface PlanFeature {
 }
 
 // Plan interface
-interface Plan {
+export interface Plan {
   name: string;
   price: number;
   description: string;

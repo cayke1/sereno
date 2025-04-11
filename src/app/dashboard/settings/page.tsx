@@ -1,14 +1,27 @@
-
+"use client";
 import { DashboardHeader } from "@/components/layout/DashboardHeader";
 import Footer from "@/components/layout/Footer";
 import { PatientManagement } from "@/components/settings/PatientManagement";
 import { ProfileSettings } from "@/components/settings/ProfileSettings";
 import { SubscriptionSettings } from "@/components/settings/SubscriptionSettings";
 import { Card } from "@/components/ui/card";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/lib/contexts/auth-context";
+import { useEffect, useState } from "react";
 
 export default function Settings() {
-  return (
+  const { user, isLoading } = useAuth();
+  const [isUserLoading, setIsUserLoading] = useState(true);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setIsUserLoading(false);
+    }
+  }, [user, isLoading]);
+  return isUserLoading ? (
+    <LoadingScreen />
+  ) : (
     <div className="min-h-screen flex flex-col">
       <DashboardHeader />
       <main className="flex-grow py-10 px-4 md:px-6 bg-slate-50">
@@ -30,10 +43,15 @@ export default function Settings() {
                 <TabsTrigger value="patients">Pacientes</TabsTrigger>
               </TabsList>
               <TabsContent value="profile">
-                <ProfileSettings />
+                <ProfileSettings
+                  email={user?.email}
+                  name={user?.name}
+                  title="Example"
+                  specialty="Example"
+                />
               </TabsContent>
               <TabsContent value="subscription">
-                <SubscriptionSettings />
+                <SubscriptionSettings professional_id={user!.id} />
               </TabsContent>
               <TabsContent value="patients">
                 <PatientManagement />
