@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Logo from "@/components/ui/Logo";
-import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BriefcaseMedical, Eye, EyeOff, LogIn, Mail, User } from "lucide-react";
 import Link from "next/link";
@@ -54,10 +53,8 @@ export default function Register() {
   const onSubmit = async (data: RegisterFormValues) => {
     try {
       await register(data.email, data.password, data.name, data.role);
-      toast.success("Conta criada com sucesso!");
     } catch (error) {
       console.error(error);
-      toast.error("Erro ao criar conta. Tente novamente.");
     }
     // Here you would typically handle registration
   };

@@ -53,7 +53,7 @@ export function DashboardHeader() {
         },
         {
           name: "Configurações",
-          href: "/dashboard/config",
+          href: "/dashboard/settings",
         },
       ];
     }

@@ -17,7 +17,6 @@ import { z } from "zod";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import { useAuth } from "@/lib/contexts/auth-context";
 import { useRouter } from "next/navigation";
 
@@ -38,14 +37,10 @@ export default function Login() {
 
   useEffect(() => {
     if (user) {
-      toast.success("Login realizado", {
-        description: "Você já está autenticado.",
-      });
-      // Redirect to the dashboard or home page
       if (user.role === "PATIENT") {
         redirect("/patient/portal");
-      } 
-      if(user.role === "PROFESSIONAL") {
+      }
+      if (user.role === "PROFESSIONAL") {
         redirect("/dashboard");
       }
     } else {
@@ -64,14 +59,8 @@ export default function Login() {
   const onSubmit = async (data: LoginFormValues) => {
     try {
       await login(data.email, data.password);
-      toast.success("Login realizado", {
-        description: "Você foi autenticado com sucesso.",
-      });
     } catch (error: unknown) {
       console.error(error);
-      toast.error("Falha ao realizar login", {
-        description: "Algum erro ocorreu durante o login.",
-      });
     }
     // Here you would typically handle authentication
   };
