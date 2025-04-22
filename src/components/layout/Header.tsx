@@ -24,6 +24,12 @@ export function Header() {
     { name: "Planos", href: "/#pricing" },
   ];
 
+  const href = user
+    ? user.role === "PROFESSIONAL"
+      ? "/dashboard"
+      : "/patient/portal"
+    : "/auth/login";
+
   const isActive = (path: string) => {
     if (path.includes("#")) {
       return (
@@ -56,9 +62,11 @@ export function Header() {
             ))}
           </ul>
 
-          <Link href="/auth/login">
-            <Button className="bg-mint-500 hover:bg-mint-600 text-white">
-              Login
+          <Link href={href}>
+            <Button className="w-full bg-mint-500 hover:bg-mint-600 text-white">
+              {href === "/auth/login" && "Login"}
+              {href === "/dashboard" && "Dashboard"}
+              {href === "/patient/portal" && "Portal"}
             </Button>
           </Link>
         </nav>
@@ -91,19 +99,13 @@ export function Header() {
               </li>
             ))}
             <li>
-              {user ? (
-                <Link href="/dashboard">
-                  <Button className="w-full bg-mint-500 hover:bg-mint-600 text-white">
-                    Dashboard
-                  </Button>
-                </Link>
-              ) : (
-                <Link href="/auth/login">
-                  <Button className="w-full bg-mint-500 hover:bg-mint-600 text-white">
-                    Login
-                  </Button>
-                </Link>
-              )}
+              <Link href={href}>
+                <Button className="w-full bg-mint-500 hover:bg-mint-600 text-white">
+                  {href === "/auth/login" && "Login"}
+                  {href === "/dashboard" && "Dashboard"}
+                  {href === "/patient/portal" && "Portal"}
+                </Button>
+              </Link>
             </li>
           </ul>
         </nav>
