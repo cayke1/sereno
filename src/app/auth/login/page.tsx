@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Logo from "@/components/ui/Logo";
-import { Eye, EyeOff, Loader, LogIn, Mail } from "lucide-react";
+import { Eye, EyeOff, LogIn, Mail } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -19,6 +19,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/contexts/auth-context";
 import { useRouter } from "next/navigation";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Email inválido" }),
@@ -46,7 +47,8 @@ export default function Login() {
     } else {
       setIsLoading(false);
     }
-  }, [user, redirect]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -57,6 +59,7 @@ export default function Login() {
   });
 
   const onSubmit = async (data: LoginFormValues) => {
+    setIsLoading(true);
     try {
       await login(data.email, data.password);
     } catch (error: unknown) {
@@ -65,11 +68,7 @@ export default function Login() {
     // Here you would typically handle authentication
   };
   return loading ? (
-    <div className="w-full h-full flex items-center justify-center">
-      <div>
-        <Loader className="animate-spin h-10 w-10 text-mint-500" />
-      </div>
-    </div>
+    <LoadingScreen />
   ) : (
     <div className="min-h-screen flex flex-col">
       <div className="container max-w-lg mx-auto flex-1 flex flex-col items-center justify-center px-4 py-12">

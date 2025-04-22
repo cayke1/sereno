@@ -35,7 +35,7 @@ export function middleware(req: NextRequest) {
   // Se não tiver token, manda pro login
   if (!userRole) {
     console.log("Sem token ou role, redirecionando para o login");
-    return NextResponse.redirect(new URL("/", baseUrl));
+    return NextResponse.redirect(new URL("/auth/login", baseUrl));
   }
 
   // Verifica o acesso com base na role do usuário
