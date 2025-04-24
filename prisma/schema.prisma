@@ -33,6 +33,7 @@ model Subscription {
   status         SubscriptionStatus
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
+  expiresAt      DateTime
   professional   User               @relation(fields: [professionalId], references: [id])
 }
 
@@ -60,12 +61,13 @@ model DailyPositiveReinforcement {
 }
 
 model ProfessionalPatient {
-  id             String   @id @default(uuid())
+  id             String           @id @default(uuid())
   professionalId String
   patientId      String
-  createdAt      DateTime @default(now())
-  patient        User     @relation("ProfessionalPatients_patient", fields: [patientId], references: [id])
-  professional   User     @relation("ProfessionalPatients_professional", fields: [professionalId], references: [id])
+  createdAt      DateTime         @default(now())
+  patient        User             @relation("ProfessionalPatients_patient", fields: [patientId], references: [id])
+  professional   User             @relation("ProfessionalPatients_professional", fields: [professionalId], references: [id])
+  TherapySession TherapySession[]
 }
 
 model Invite {
@@ -76,6 +78,18 @@ model Invite {
   updatedAt    DateTime     @updatedAt
   status       InviteStatus
   professional User         @relation(fields: [sent_by], references: [id])
+}
+
+model TherapySession {
+  id                    Int                 @id @unique @default(autoincrement())
+  professionalPatientId String
+  done                  Boolean?            @default(false)
+  confirmed             Boolean?            @default(false)
+  startDate             DateTime
+  endDate               DateTime
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime
+  ProfessionalPatient   ProfessionalPatient @relation(fields: [professionalPatientId], references: [id])
 }
 
 enum SubscriptionStatus {
