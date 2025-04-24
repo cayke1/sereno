@@ -13,6 +13,7 @@ import { useAuth } from "@/lib/contexts/auth-context";
 import { useSubscription } from "@/lib/contexts/subscription-context";
 import { pricingFormatter } from "@/lib/priceFormatter";
 import { CheckCircle2 } from "lucide-react";
+import Link from "next/link";
 import { toast } from "sonner";
 
 export default function SelectPlan() {
@@ -118,8 +119,12 @@ export default function SelectPlan() {
                 </Card>
               ))}
             </div>
+
           </div>
         </div>
+            <Link className="underline text-gray-400 text-center " href="/dashboard">
+              <p>Fazer isso mais tarde</p>
+            </Link>
       </div>
     </div>
   );
