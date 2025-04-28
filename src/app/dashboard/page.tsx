@@ -78,18 +78,8 @@ export default function Page() {
     if (!isLoading) {
       if (data !== undefined) {
         data.map((p) => {
-          const newPatient = {
-            id: p.patientId,
-            name: p.patient.name,
-            lastSession: "",
-            nextSession: "",
-            emotionScore: 0,
-            status: "active" as const,
-            trends: [""],
-            avatar: "",
-          };
-          if (patients != null) setPatients([...patients, newPatient]);
-          else setPatients([newPatient]);
+          if (patients != null) setPatients([...patients, p]);
+          else setPatients([p]);
         });
       }
     }

@@ -76,20 +76,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const parsedUser = JSON.parse(storedUser);
             setUser(parsedUser);
           } catch (error) {
-            console.error("Erro ao analisar os dados do usuário:", error);
             removeLocalStorage("access_token");
             removeLocalStorage("user");
+            console.log(error)
           }
-        } else {
-          console.log("Nenhum dado de usuário encontrado no localStorage");
         }
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadUserData();
-  }, []);
+    if (!user) loadUserData();
+  }, [user]);
 
   const afterLogin = async (response: AuthResponse) => {
     try {

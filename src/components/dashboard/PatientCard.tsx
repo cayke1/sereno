@@ -22,6 +22,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { formatDate } from "@/lib/formatDate";
+import Link from "next/link";
 
 interface PatientCardProps {
   patient: {
@@ -101,7 +103,11 @@ export function PatientCard({ patient }: PatientCardProps) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>Ver perfil</DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href={`/dashboard/patient/${patient.id}`}>
+                    Ver perfil
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem>Enviar mensagem</DropdownMenuItem>
                 <DropdownMenuItem>Agendar sessão</DropdownMenuItem>
               </DropdownMenuContent>
@@ -157,7 +163,9 @@ export function PatientCard({ patient }: PatientCardProps) {
               <Clock className="h-4 w-4 text-sand-700" />
             </div>
             <p className="text-sm font-medium truncate">
-              {patient.nextSession || "Não agendada"}
+              {patient.nextSession
+                ? formatDate(patient.nextSession)
+                : "Não agendada"}
             </p>
           </div>
         </div>

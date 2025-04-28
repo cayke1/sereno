@@ -3,21 +3,13 @@ import { useEffect, useState } from "react";
 
 interface ResponseGetAllPatients {
   id: string;
-  professionalId: string;
-  patientId: string;
-  createdAt: string;
-  updatedAt: string;
-  patient: {
-    id: string;
-    name: string;
-    email: string;
-    password: string;
-    role: "PATIENT";
-    createdAt: string;
-    updatedAt: string;
-    licenseNumber: null;
-    stripeCustomerId: string;
-  };
+  name: string;
+  lastSession: string;
+  nextSession: string;
+  emotionScore: number;
+  status: "active" | "inactive" | "new";
+  trends: string[];
+  avatar: string;
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
