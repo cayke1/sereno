@@ -5,7 +5,6 @@ import {
   MoreVertical,
   Smile,
   SmilePlus,
-  User2,
 } from "lucide-react";
 import {
   Card,
@@ -24,6 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { formatDate } from "@/lib/formatDate";
 import Link from "next/link";
+import Image from "next/image";
 
 interface PatientCardProps {
   patient: {
@@ -78,7 +78,13 @@ export function PatientCard({ patient }: PatientCardProps) {
           <div className="flex items-center gap-3">
             <div className="relative">
               <div className="h-12 w-12 rounded-full bg-mint-100 flex items-center justify-center">
-                <User2 className="h-6 w-6 text-mint-700" />
+                <Image
+                  src={patient.avatar}
+                  width={45}
+                  height={45}
+                  alt={patient.name}
+                  className="rounded-full"
+                />
               </div>
               {patient.status === "new" && (
                 <div className="absolute -top-1 -right-1 h-4 w-4 bg-sky-500 rounded-full border-2 border-white" />
