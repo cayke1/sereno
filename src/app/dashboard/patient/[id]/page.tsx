@@ -202,20 +202,6 @@ export default function PatientInfo() {
                         </CardContent>
                       </Card>
 
-                      <Card className="bg-sky-50 border border-sky-100">
-                        <CardContent className="p-4">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <p className="text-sm text-sky-700">Bem-estar</p>
-                              <p className="text-lg font-medium">
-                                {patient.emotionScore}% Positivo
-                              </p>
-                            </div>
-                            <Smile className="h-5 w-5 text-sky-700" />
-                          </div>
-                        </CardContent>
-                      </Card>
-
                       <Card className="bg-sand-50 border border-sand-100">
                         <CardContent className="p-4">
                           <div className="flex justify-between items-start">

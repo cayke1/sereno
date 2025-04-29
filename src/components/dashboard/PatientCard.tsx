@@ -3,7 +3,6 @@ import {
   Clock,
   MessageSquare,
   MoreVertical,
-  Smile,
   SmilePlus,
 } from "lucide-react";
 import {
@@ -39,12 +38,6 @@ interface PatientCardProps {
 }
 
 export function PatientCard({ patient }: PatientCardProps) {
-  const getEmotionColor = (score: number) => {
-    if (score >= 75) return "text-green-500";
-    if (score >= 50) return "text-sky-500";
-    if (score >= 25) return "text-amber-500";
-    return "text-red-500";
-  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -123,20 +116,6 @@ export function PatientCard({ patient }: PatientCardProps) {
 
       <CardContent className="pb-4">
         <div className="mt-4 grid grid-cols-3 gap-3">
-          <div className="p-3 rounded-lg bg-mint-50 border border-mint-100">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs text-mint-700">Bem-estar</span>
-              <Smile className="h-4 w-4 text-mint-700" />
-            </div>
-            <p
-              className={`text-lg font-semibold ${getEmotionColor(
-                patient.emotionScore
-              )}`}
-            >
-              {patient.emotionScore}%
-            </p>
-          </div>
-
           <div className="p-3 rounded-lg bg-sky-50 border border-sky-100">
             <div className="flex items-center justify-between mb-1">
               <span className="text-xs text-sky-700">Tendência</span>
