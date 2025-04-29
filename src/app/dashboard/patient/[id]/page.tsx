@@ -1,6 +1,5 @@
 "use client";
 import Footer from "@/components/layout/Footer";
-import { Avatar } from "@/components/ui/avatar";
 import {
   Card,
   CardContent,
