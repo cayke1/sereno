@@ -9,25 +9,15 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import EmotionChart from "@/components/dashboard/EmotionChart";
 import {
   ArrowLeft,
   Calendar,
   Clock,
   FileText,
-  MessageSquare,
   Smile,
   User2,
   Activity,
-  ChevronRight,
   FilePlus,
   Download,
   Send,
@@ -47,8 +37,6 @@ interface Patient {
   email: string;
   age: number;
   phone: string;
-  address: string;
-  occupation: string;
   avatar: string;
   startDate: string;
   lastSession: string;
@@ -88,45 +76,6 @@ export default function PatientInfo() {
     { date: "22/06", calm: 50, joy: 50, anxiety: 40, sadness: 35 },
     { date: "29/06", calm: 60, joy: 60, anxiety: 30, sadness: 25 },
     { date: "06/07", calm: 70, joy: 75, anxiety: 20, sadness: 15 },
-  ];
-
-  // Mock data for session history
-  const sessionHistory = [
-    {
-      date: "15/06/2023",
-      time: "14:00",
-      duration: "50 min",
-      notes: "Paciente relatou melhora nos sintomas de ansiedade",
-      emotionScore: 85,
-    },
-    {
-      date: "01/06/2023",
-      time: "14:00",
-      duration: "50 min",
-      notes: "Discutimos técnicas de respiração e mindfulness",
-      emotionScore: 80,
-    },
-    {
-      date: "18/05/2023",
-      time: "14:00",
-      duration: "50 min",
-      notes: "Paciente expressou preocupações com ambiente de trabalho",
-      emotionScore: 70,
-    },
-    {
-      date: "04/05/2023",
-      time: "14:00",
-      duration: "50 min",
-      notes: "Início da prática de meditação diária",
-      emotionScore: 65,
-    },
-    {
-      date: "20/04/2023",
-      time: "14:00",
-      duration: "50 min",
-      notes: "Avaliação de progresso e ajustes no plano terapêutico",
-      emotionScore: 60,
-    },
   ];
 
   // Mock data for emotional records
@@ -233,10 +182,6 @@ export default function PatientInfo() {
                           <Calendar className="h-4 w-4 mr-2" />
                           Agendar Sessão
                         </Button>
-                        <Button className="bg-mint-500 hover:bg-mint-600 text-white">
-                          <MessageSquare className="h-4 w-4 mr-2" />
-                          Mensagem
-                        </Button>
                       </div>
                     </div>
 
@@ -308,12 +253,6 @@ export default function PatientInfo() {
                       Visão Geral
                     </TabsTrigger>
                     <TabsTrigger
-                      value="sessions"
-                      className="h-14 data-[state=active]:bg-white rounded-none px-6"
-                    >
-                      Sessões
-                    </TabsTrigger>
-                    <TabsTrigger
                       value="emotions"
                       className="h-14 data-[state=active]:bg-white rounded-none px-6"
                     >
@@ -346,18 +285,6 @@ export default function PatientInfo() {
                               Telefone
                             </p>
                             <p>{patient.phone}</p>
-                          </div>
-                          <div className="p-4 bg-muted rounded-lg">
-                            <p className="text-sm text-muted-foreground">
-                              Endereço
-                            </p>
-                            <p>{patient.address}</p>
-                          </div>
-                          <div className="p-4 bg-muted rounded-lg">
-                            <p className="text-sm text-muted-foreground">
-                              Profissão
-                            </p>
-                            <p>{patient.occupation}</p>
                           </div>
                         </div>
                       </div>
@@ -416,71 +343,6 @@ export default function PatientInfo() {
                         title="Tendências Emocionais"
                         description="Evolução emocional ao longo do tempo"
                       />
-                    </div>
-                  </TabsContent>
-
-                  {/* Sessions Tab */}
-                  <TabsContent value="sessions" className="p-6">
-                    <div className="flex justify-between items-center mb-4">
-                      <h3 className="text-lg font-semibold">
-                        Histórico de Sessões
-                      </h3>
-                      <Button className="bg-mint-500 hover:bg-mint-600 text-white">
-                        <FilePlus className="h-4 w-4 mr-2" />
-                        Nova Sessão
-                      </Button>
-                    </div>
-
-                    <div className="overflow-hidden rounded-lg border">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Data</TableHead>
-                            <TableHead>Horário</TableHead>
-                            <TableHead>Duração</TableHead>
-                            <TableHead>Bem-estar</TableHead>
-                            <TableHead>Anotações</TableHead>
-                            <TableHead className="w-12"></TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {sessionHistory.map((session, index) => (
-                            <TableRow key={index}>
-                              <TableCell>{session.date}</TableCell>
-                              <TableCell>{session.time}</TableCell>
-                              <TableCell>{session.duration}</TableCell>
-                              <TableCell>
-                                <div className="flex items-center gap-2">
-                                  <div
-                                    className={`h-2.5 w-2.5 rounded-full ${
-                                      session.emotionScore >= 75
-                                        ? "bg-green-500"
-                                        : session.emotionScore >= 50
-                                          ? "bg-sky-500"
-                                          : session.emotionScore >= 25
-                                            ? "bg-amber-500"
-                                            : "bg-red-500"
-                                    }`}
-                                  ></div>
-                                  <span>{session.emotionScore}%</span>
-                                </div>
-                              </TableCell>
-                              <TableCell className="max-w-[250px] truncate">
-                                {session.notes}
-                              </TableCell>
-                              <TableCell>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-8 w-8"
-                                >
-                                  <ChevronRight className="h-4 w-4" />
-                                </Button>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
                     </div>
                   </TabsContent>
 
@@ -666,17 +528,6 @@ export default function PatientInfo() {
                   </CardHeader>
                   <CardContent className="pb-3">
                     <div className="space-y-2">
-                      <Button className="justify-start w-full bg-mint-500 hover:bg-mint-600 text-white">
-                        <FilePlus className="h-4 w-4 mr-3" />
-                        Registrar Sessão
-                      </Button>
-                      <Button
-                        variant="outline"
-                        className="justify-start w-full text-mint-700 border-mint-200 hover:bg-mint-50"
-                      >
-                        <Smile className="h-4 w-4 mr-3" />
-                        Novo Registro Emocional
-                      </Button>
                       <Button
                         variant="outline"
                         className="justify-start w-full text-mint-700 border-mint-200 hover:bg-mint-50"
@@ -689,14 +540,7 @@ export default function PatientInfo() {
                         className="justify-start w-full text-mint-700 border-mint-200 hover:bg-mint-50"
                       >
                         <FileText className="h-4 w-4 mr-3" />
-                        Criar Anotação
-                      </Button>
-                      <Button
-                        variant="outline"
-                        className="justify-start w-full text-mint-700 border-mint-200 hover:bg-mint-50"
-                      >
-                        <MessageSquare className="h-4 w-4 mr-3" />
-                        Enviar Mensagem
+                        Adicionar documentos
                       </Button>
                     </div>
                   </CardContent>

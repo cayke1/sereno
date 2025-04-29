@@ -9,8 +9,6 @@ interface GetPatientResponse {
   email: string;
   age: number;
   phone: string;
-  address: string;
-  occupation: string;
   avatar: string;
   startDate: string;
   lastSession: string;

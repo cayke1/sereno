@@ -114,7 +114,6 @@ export function PatientCard({ patient }: PatientCardProps) {
                     Ver perfil
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>Enviar mensagem</DropdownMenuItem>
                 <DropdownMenuItem>Agendar sessão</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
