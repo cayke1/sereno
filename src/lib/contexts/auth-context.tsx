@@ -127,9 +127,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         );
 
         toast.success("Usuário logado com sucesso!");
-        if (user && user.role === "PROFESSIONAL") {
+        if (response.role === "PROFESSIONAL") {
           router.push("/dashboard/select-plan");
-        } else if (user && user.role === "PATIENT") {
+        } else if (response.role === "PATIENT") {
           router.push("/patient/portal");
         }
       } else {
