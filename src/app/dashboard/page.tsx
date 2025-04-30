@@ -27,6 +27,7 @@ interface Patient {
   status: "active" | "inactive" | "new";
   trends: string[];
   avatar: string;
+  relationId: string;
 }
 export default function Page() {
   // const patientsMock = [
@@ -214,6 +215,7 @@ export default function Page() {
                               nextSession: patient.nextSession,
                               emotionScore: patient.emotionScore,
                               status: patient.status,
+                              relationId: patient.relationId,
                               trends: patient.trends as (
                                 | "up"
                                 | "down"
