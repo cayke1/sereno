@@ -13,21 +13,18 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { DatePicker } from "../ui/date-picker";
 import { Input } from "../ui/input";
 import { TimeInput } from "../helpers/InputMask";
-import {
-  addMinutes,
-  formatISO,
-  setHours,
-  setMinutes,
-} from "date-fns";
+import { addMinutes, formatISO, setHours, setMinutes } from "date-fns";
 
 // Componente de datepicker personalizado que não usa Popover
 
 interface ModalRegisterSessionProps {
   professionalPatientId: string;
+  widest?: boolean;
 }
 
 export function ModalRegisterSession({
   professionalPatientId,
+  widest,
 }: ModalRegisterSessionProps) {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(new Date(Date.now()));
@@ -38,7 +35,7 @@ export function ModalRegisterSession({
     if (!date) return;
 
     const [hours, minutes] = startTime.split(":").map(Number);
-    
+
     let startDate = date;
     startDate = setHours(startDate, hours);
     startDate = setMinutes(startDate, minutes);
@@ -70,7 +67,7 @@ export function ModalRegisterSession({
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="text-mint-700 border-mint-200 hover:bg-mint-50"
+          className={`${widest && "justify-start w-full"} text-mint-700 border-mint-200 hover:bg-mint-50`}
         >
           <CalendarIcon className="h-4 w-4 mr-2" />
           Agendar Sessão

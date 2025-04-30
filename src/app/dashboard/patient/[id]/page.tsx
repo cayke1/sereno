@@ -177,7 +177,9 @@ export default function PatientInfo() {
                       </div>
 
                       <div className="flex gap-2">
-                        <ModalRegisterSession professionalPatientId={patient.relationId} />
+                        <ModalRegisterSession
+                          professionalPatientId={patient.relationId}
+                        />
                       </div>
                     </div>
 
@@ -510,13 +512,10 @@ export default function PatientInfo() {
                   </CardHeader>
                   <CardContent className="pb-3">
                     <div className="space-y-2">
-                      <Button
-                        variant="outline"
-                        className="justify-start w-full text-mint-700 border-mint-200 hover:bg-mint-50"
-                      >
-                        <Calendar className="h-4 w-4 mr-3" />
-                        Agendar Sessão
-                      </Button>
+                      <ModalRegisterSession
+                        professionalPatientId={patient.relationId}
+                        widest
+                      />
                       <Button
                         variant="outline"
                         className="justify-start w-full text-mint-700 border-mint-200 hover:bg-mint-50"
