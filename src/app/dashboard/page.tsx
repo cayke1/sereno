@@ -16,7 +16,7 @@ import Footer from "@/components/layout/Footer";
 import { DashboardHeader } from "@/components/layout/DashboardHeader";
 import { ModalInvitePatient } from "@/components/dashboard/ModalInvitePatient";
 import { useEffect, useState } from "react";
-import { useGetPatients } from "@/lib/hooks/profesisonal-report/useGetPatients";
+import { useGetPatients } from "@/lib/hooks/professional-report/useGetPatients";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 interface Patient {
   id: string;
