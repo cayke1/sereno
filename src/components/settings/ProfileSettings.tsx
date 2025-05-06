@@ -9,12 +9,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Camera, Loader2, Save } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { UserService } from "@/lib/services/user";
 
@@ -47,7 +47,7 @@ export function ProfileSettings(defaultValues: DefaultValues) {
 
   const onSubmit = async (data: ProfileFormValues) => {
     setIsLoading(true);
-
+    console.log(data);
     if (imageFile) {
       try {
         const res = await userService.sendImage(imageFile);
