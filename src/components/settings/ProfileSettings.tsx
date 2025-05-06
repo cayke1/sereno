@@ -14,8 +14,9 @@ import { Camera, Loader2, Save } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { UserService } from "@/lib/services/user";
 
 const profileFormSchema = z.object({
   name: z
@@ -36,6 +37,7 @@ interface DefaultValues {
   imageUrl?: string;
 }
 export function ProfileSettings(defaultValues: DefaultValues) {
+  const userService = UserService;
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<ProfileFormValues>({
@@ -45,7 +47,18 @@ export function ProfileSettings(defaultValues: DefaultValues) {
 
   const onSubmit = async (data: ProfileFormValues) => {
     setIsLoading(true);
-    console.log("form data", data);
+
+    if (imageFile) {
+      try {
+        const res = await userService.sendImage(imageFile);
+        if (res) {
+          toast.success("Imagem enviada com sucesso");
+        }
+      } catch (error) {
+        toast.error("Erro ao enviar imagem");
+        console.log(error);
+      }
+    }
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
     toast.success("Perfil atualizado", {
@@ -68,7 +81,6 @@ export function ProfileSettings(defaultValues: DefaultValues) {
       };
       reader.readAsDataURL(file);
     }
-    console.log(imageFile);
   };
 
   return (
@@ -78,15 +90,13 @@ export function ProfileSettings(defaultValues: DefaultValues) {
       <div className="flex flex-col md:flex-row gap-8 mb-8">
         <div className="flex flex-col items-center">
           <Avatar className="h-32 w-32 mb-4">
-            {defaultValues.imageUrl ? (
+            {imagePreview ? (
+              <AvatarImage src={imagePreview} alt="User profile picture" />
+            ) : (
               <AvatarImage
                 src={defaultValues.imageUrl}
                 alt="User profile picture"
               />
-            ) : (
-              <AvatarFallback className="bg-mint-500 text-white">
-                {defaultValues.name?.charAt(0).toUpperCase()}
-              </AvatarFallback>
             )}
           </Avatar>
 
