@@ -26,10 +26,11 @@ import {
 import { useEffect, useState } from "react";
 import { redirect, useParams } from "next/navigation";
 import { DashboardHeader } from "@/components/layout/DashboardHeader";
-import { useGetPatient } from "@/lib/hooks/profesisonal-report/useGetPatient";
+import { useGetPatient } from "@/lib/hooks/professional-report/useGetPatient";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { formatDateVerbose } from "@/lib/formatDateVerbose";
 import Image from "next/image";
+import { ModalRegisterSession } from "@/components/dashboard/ModalRegisterSession";
 
 interface Patient {
   id: string;
@@ -45,6 +46,7 @@ interface Patient {
   status: "active" | "inactive" | "archived";
   diagnoses: string[];
   goals: string[];
+  relationId: string;
 }
 
 export default function PatientInfo() {
@@ -175,13 +177,9 @@ export default function PatientInfo() {
                       </div>
 
                       <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          className="text-mint-700 border-mint-200 hover:bg-mint-50"
-                        >
-                          <Calendar className="h-4 w-4 mr-2" />
-                          Agendar Sessão
-                        </Button>
+                        <ModalRegisterSession
+                          professionalPatientId={patient.relationId}
+                        />
                       </div>
                     </div>
 
@@ -514,13 +512,10 @@ export default function PatientInfo() {
                   </CardHeader>
                   <CardContent className="pb-3">
                     <div className="space-y-2">
-                      <Button
-                        variant="outline"
-                        className="justify-start w-full text-mint-700 border-mint-200 hover:bg-mint-50"
-                      >
-                        <Calendar className="h-4 w-4 mr-3" />
-                        Agendar Sessão
-                      </Button>
+                      <ModalRegisterSession
+                        professionalPatientId={patient.relationId}
+                        widest
+                      />
                       <Button
                         variant="outline"
                         className="justify-start w-full text-mint-700 border-mint-200 hover:bg-mint-50"

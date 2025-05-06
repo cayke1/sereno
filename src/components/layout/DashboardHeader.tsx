@@ -23,7 +23,6 @@ export function DashboardHeader() {
     },
   ];
   let customNavItems = [
-    { name: "Início", href: "/" },
     { name: "Recursos", href: "/#features" },
     { name: "Sobre", href: "/#about" },
     { name: "Configurações", href: "/dashboard/config" },
@@ -74,7 +73,7 @@ export function DashboardHeader() {
   return (
     <header className="py-4 px-4 md:px-6 w-full bg-white/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
       <div className="container max-w-7xl mx-auto flex justify-between items-center">
-        <Logo withText size="md" />
+        <Logo withText size="md" href={customNavItems[0].href} />
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8">

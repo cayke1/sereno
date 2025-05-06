@@ -10,6 +10,7 @@ interface ResponseGetAllPatients {
   status: "active" | "inactive" | "new";
   trends: string[];
   avatar: string;
+  relationId: string;
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";

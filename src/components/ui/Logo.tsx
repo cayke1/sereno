@@ -4,9 +4,10 @@ import Link from "next/link";
 interface LogoProps {
   size?: "sm" | "md" | "lg";
   withText?: boolean;
+  href?: string;
 }
 
-export function Logo({ size = 'md', withText }: LogoProps) {
+export function Logo({ size = "md", withText, href }: LogoProps) {
   const sizeClasses = {
     sm: "h-6 w-6",
     md: "h-8 w-8",
@@ -21,7 +22,7 @@ export function Logo({ size = 'md', withText }: LogoProps) {
 
   return (
     <Link
-      href="/"
+      href={href ? href : "/"}
       className="flex items-center gap-2 hover:opacity-90 transition-opacity"
     >
       <div className="relative">

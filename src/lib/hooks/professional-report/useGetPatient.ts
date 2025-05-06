@@ -17,6 +17,7 @@ interface GetPatientResponse {
   status: "active" | "inactive" | "archived";
   diagnoses: string[];
   goals: string[];
+  relationId: string;
 }
 
 async function getPatient(
