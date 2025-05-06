@@ -11,6 +11,8 @@ interface User {
   email: string;
   role: "PATIENT" | "PROFESSIONAL";
   professional_id?: string;
+  imageUrl?: string;
+  plan?: string;
 }
 
 interface AuthContextType {
@@ -78,7 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           } catch (error) {
             removeLocalStorage("access_token");
             removeLocalStorage("user");
-            console.log(error)
+            console.log(error);
           }
         }
       } finally {
@@ -97,6 +99,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           name: response.name,
           email: response.email,
           role: response.role,
+          imageUrl: response.imageUrl,
+          plan: response.plan,
         });
         setToken(response.access_token);
 
@@ -123,12 +127,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             name: response.name,
             email: response.email,
             role: response.role,
+            imageUrl: response.imageUrl,
+            plan: response.plan,
           })
         );
 
         toast.success("Usuário logado com sucesso!");
         if (user && user.role === "PROFESSIONAL") {
-          router.push("/dashboard/select-plan");
+          if (!response.plan) {
+            router.push("/dashboard/select-plan");
+          } else {
+            router.push("/dashboard");
+          }
         } else if (user && user.role === "PATIENT") {
           router.push("/patient/portal");
         }

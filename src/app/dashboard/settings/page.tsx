@@ -46,6 +46,7 @@ export default function Settings() {
                 <ProfileSettings
                   email={user?.email}
                   name={user?.name}
+                  imageUrl={user?.imageUrl}
                   title="Example"
                   specialty="Example"
                 />

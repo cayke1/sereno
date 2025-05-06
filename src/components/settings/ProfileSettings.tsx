@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   Form,
   FormControl,
@@ -29,10 +29,11 @@ const profileFormSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 interface DefaultValues {
-    name?: string;
-    email?: string;
-    title?: string;
-    specialty?: string;
+  name?: string;
+  email?: string;
+  title?: string;
+  specialty?: string;
+  imageUrl?: string;
 }
 export function ProfileSettings(defaultValues: DefaultValues) {
   const [isLoading, setIsLoading] = useState(false);
@@ -77,11 +78,16 @@ export function ProfileSettings(defaultValues: DefaultValues) {
       <div className="flex flex-col md:flex-row gap-8 mb-8">
         <div className="flex flex-col items-center">
           <Avatar className="h-32 w-32 mb-4">
-            <AvatarImage
-              src={imagePreview || "/placeholder.svg"}
-              alt="Profile"
-            />
-            <AvatarFallback>DR</AvatarFallback>
+            {defaultValues.imageUrl ? (
+              <AvatarImage
+                src={defaultValues.imageUrl}
+                alt="User profile picture"
+              />
+            ) : (
+              <AvatarFallback className="bg-mint-500 text-white">
+                {defaultValues.name?.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            )}
           </Avatar>
 
           <div className="relative">
