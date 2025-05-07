@@ -31,6 +31,7 @@ import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { formatDateVerbose } from "@/lib/formatDateVerbose";
 import Image from "next/image";
 import { ModalRegisterSession } from "@/components/dashboard/ModalRegisterSession";
+import { ModalUploadDocument } from "@/components/dashboard/ModalUploadDocument";
 
 interface Patient {
   id: string;
@@ -56,7 +57,6 @@ export default function PatientInfo() {
   const [patient, setPatient] = useState<Patient | null>(null);
 
   const [isLoading, setIsLoading] = useState(isLoadingPatient);
-
   useEffect(() => {
     if (data !== undefined) {
       const newPatient = {
@@ -408,10 +408,7 @@ export default function PatientInfo() {
                       <h3 className="text-lg font-semibold">
                         Anotações e Documentos
                       </h3>
-                      <Button className="bg-mint-500 hover:bg-mint-600 text-white">
-                        <FileText className="h-4 w-4 mr-2" />
-                        Nova Anotação
-                      </Button>
+                      <ModalUploadDocument patient_id={patient.id} />
                     </div>
 
                     <div className="space-y-4">
@@ -516,13 +513,11 @@ export default function PatientInfo() {
                         professionalPatientId={patient.relationId}
                         widest
                       />
-                      <Button
-                        variant="outline"
-                        className="justify-start w-full text-mint-700 border-mint-200 hover:bg-mint-50"
-                      >
-                        <FileText className="h-4 w-4 mr-3" />
-                        Adicionar documentos
-                      </Button>
+                      <ModalUploadDocument
+                        widest
+                        Icon={FileText}
+                        patient_id={patient.id}
+                      />
                     </div>
                   </CardContent>
                 </Card>
