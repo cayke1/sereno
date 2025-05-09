@@ -8,21 +8,24 @@ datasource db {
 }
 
 model User {
-  id                         String                       @id @default(uuid())
-  name                       String
-  email                      String                       @unique
-  password                   String
-  role                       Role                         @default(PATIENT)
-  createdAt                  DateTime                     @default(now())
-  updatedAt                  DateTime                     @updatedAt
-  licenseNumber              String?                      @unique
-  stripeCustomerId           String?                      @unique
-  DailyPositiveReinforcement DailyPositiveReinforcement[]
-  feelings                   Feeling[]
-  Invite                     Invite[]
-  patients                   ProfessionalPatient[]        @relation("ProfessionalPatients_patient")
-  professionals              ProfessionalPatient[]        @relation("ProfessionalPatients_professional")
-  Subscription               Subscription?
+  id                                     String                       @id @default(uuid())
+  name                                   String
+  email                                  String                       @unique
+  password                               String
+  role                                   Role                         @default(PATIENT)
+  createdAt                              DateTime                     @default(now())
+  updatedAt                              DateTime                     @updatedAt
+  licenseNumber                          String?                      @unique
+  stripeCustomerId                       String?                      @unique
+  imageUrl                               String?
+  DailyPositiveReinforcement             DailyPositiveReinforcement[]
+  Document_Document_owner_idToUser       Document[]                   @relation("Document_owner_idToUser")
+  Document_Document_uploaded_by_idToUser Document[]                   @relation("Document_uploaded_by_idToUser")
+  feelings                               Feeling[]
+  Invite                                 Invite[]
+  patients                               ProfessionalPatient[]        @relation("ProfessionalPatients_patient")
+  professionals                          ProfessionalPatient[]        @relation("ProfessionalPatients_professional")
+  Subscription                           Subscription?
 }
 
 model Subscription {
@@ -92,6 +95,21 @@ model TherapySession {
   ProfessionalPatient   ProfessionalPatient @relation(fields: [professionalPatientId], references: [id])
 }
 
+model Document {
+  id                                 String       @id @unique
+  url                                String
+  filename                           String
+  mimeType                           String
+  createdAt                          DateTime     @default(now())
+  owner_id                           String?
+  isPublic                           Boolean      @default(false)
+  type                               DocumentType
+  uploaded_by_id                     String?
+  category                           String?
+  User_Document_owner_idToUser       User?        @relation("Document_owner_idToUser", fields: [owner_id], references: [id])
+  User_Document_uploaded_by_idToUser User?        @relation("Document_uploaded_by_idToUser", fields: [uploaded_by_id], references: [id])
+}
+
 enum SubscriptionStatus {
   ACTIVE
   CANCELLED
@@ -124,4 +142,12 @@ enum InviteStatus {
 enum Role {
   PATIENT
   PROFESSIONAL
+}
+
+enum DocumentType {
+  MODEL
+  PATIENT_UPLOAD
+  PROFESSIONAL_UPLOAD
+  PATIENT_TO_PROFESSIONAL
+  PROFESSIONAL_TO_PATIENT
 }

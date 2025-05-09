@@ -77,8 +77,9 @@ export function ModalUploadDocument({
     try {
       const req = await documentService.uploadDocument({
         file,
-        category: "PROFESSIONAL_UPLOAD",
+        type: "PROFESSIONAL_TO_PATIENT",
         owner_id: patient_id || undefined,
+        category: category,
       });
       if (!req || req instanceof Error) {
         throw new Error("Falha ao fazer upload do documento");
