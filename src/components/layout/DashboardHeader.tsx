@@ -47,8 +47,8 @@ export function DashboardHeader() {
           href: "/dashboard",
         },
         {
-          name: "Pacientes",
-          href: "/dashboard/patients",
+          name: "Documentos",
+          href: "/dashboard/documents",
         },
         {
           name: "Configurações",
