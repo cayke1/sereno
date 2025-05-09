@@ -42,11 +42,10 @@ export function ModalUploadDocument({
   const documentService = DocumentService;
 
   const documentCategories = [
-    { id: "medical", name: "Relatório Médico" },
     { id: "evaluation", name: "Avaliação Psicológica" },
     { id: "treatment", name: "Plano de Tratamento" },
-    { id: "progress", name: "Relatório de Progresso" },
     { id: "personal", name: "Documentação Pessoal" },
+    { id: "anamnese", name: "Anamnese" },
     { id: "other", name: "Outros" },
   ];
 
