@@ -15,14 +15,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { FileText } from "lucide-react";
+import { formatDate } from "@/lib/formatDate";
 
 interface Document {
   id: string;
-  name: string;
-  type: string;
-  size: string;
-  updatedAt: string;
-  patient?: string;
+  filename: string;
+  mimeType: string;
+  size?: string;
+  createdAt: string;
+  owner_id?: string;
 }
 
 interface DocumentFolderProps {
@@ -68,12 +69,12 @@ export function DocumentFolder({
                   <TableCell className="font-medium">
                     <div className="flex items-center gap-2">
                       <FileText size={18} className="text-mint-600" />
-                      <span className="truncate max-w-[300px]">{doc.name}</span>
+                      <span className="truncate max-w-[300px]">{doc.filename}</span>
                     </div>
                   </TableCell>
-                  {showPatientColumn && <TableCell>{doc.patient}</TableCell>}
+                  {showPatientColumn && <TableCell>{doc.owner_id}</TableCell>}
                   <TableCell>{doc.size}</TableCell>
-                  <TableCell>{doc.updatedAt}</TableCell>
+                  <TableCell>{formatDate(doc.createdAt)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

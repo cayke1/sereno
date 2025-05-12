@@ -1,5 +1,5 @@
-"use client"
-import React, { useState } from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import Footer from "@/components/layout/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,78 +8,57 @@ import { DocumentFolder } from "@/components/documents/DocumentFolder";
 import { DocumentUploadModal } from "@/components/documents/DocumentUploadModal";
 import { Folder, FolderOpen, Search, Upload, File } from "lucide-react";
 import { DashboardHeader } from "@/components/layout/DashboardHeader";
-
-// Sample data - in a real app this would come from an API
-const modelDocuments = [
-  {
-    id: "1",
-    name: "Formulário de Avaliação Inicial.pdf",
-    type: "pdf",
-    size: "245 KB",
-    updatedAt: "2025-01-15",
-  },
-  {
-    id: "2",
-    name: "Contrato de Serviço.pdf",
-    type: "pdf",
-    size: "198 KB",
-    updatedAt: "2025-02-03",
-  },
-  {
-    id: "3",
-    name: "Relatório de Progresso.pdf",
-    type: "pdf",
-    size: "312 KB",
-    updatedAt: "2025-03-20",
-  },
-  {
-    id: "4",
-    name: "Questionário de Satisfação.pdf",
-    type: "pdf",
-    size: "175 KB",
-    updatedAt: "2025-04-12",
-  },
-];
-
-const patientDocuments = [
-  {
-    id: "1",
-    name: "Histórico Médico - João Silva.pdf",
-    type: "pdf",
-    size: "1.2 MB",
-    updatedAt: "2025-04-05",
-    patient: "João Silva",
-  },
-  {
-    id: "2",
-    name: "Avaliação Psicológica - Maria Santos.pdf",
-    type: "pdf",
-    size: "780 KB",
-    updatedAt: "2025-03-22",
-    patient: "Maria Santos",
-  },
-  {
-    id: "3",
-    name: "Plano de Tratamento - Carlos Oliveira.pdf",
-    type: "pdf",
-    size: "420 KB",
-    updatedAt: "2025-02-18",
-    patient: "Carlos Oliveira",
-  },
-  {
-    id: "4",
-    name: "Relatório Médico - Ana Lima.pdf",
-    type: "pdf",
-    size: "650 KB",
-    updatedAt: "2025-04-01",
-    patient: "Ana Lima",
-  },
-];
+import {
+  GetModelsResponse,
+  useGetModels,
+} from "@/lib/hooks/documents/useGetModels";
+import { useGetFromPatient } from "@/lib/hooks/documents/useGetFromPatient";
+import { useGetMy } from "@/lib/hooks/documents/useGetMy";
 
 export default function DocumentsPage() {
+  const {
+    data,
+    isLoading: isLoadingModels,
+    error: errorModels,
+  } = useGetModels();
+  const {
+    data: patientDocumentsRes,
+    isLoading: isLoadingPatientDocuments,
+    error: errorPatientDocuments,
+  } = useGetFromPatient();
+  const {
+    data: myDocumentsRes,
+    isLoading: isLoadingMyDocuments,
+    error: errorMyDocuments,
+  } = useGetMy();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFolder, setActiveFolder] = useState("models");
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [modelDocuments, setModelDocuments] = useState<GetModelsResponse[]>([]);
+  const [patientDocuments, setPatientDocuments] = useState<GetModelsResponse[]>(
+    []
+  );
+  const [myDocs, setMyDocs] = useState<GetModelsResponse[]>(modelDocuments);
+
+  useEffect(() => {
+    if (!isLoadingModels) {
+      if (data !== undefined) {
+        setModelDocuments(data);
+      }
+    }
+
+    if (!isLoadingPatientDocuments) {
+      if (patientDocumentsRes !== undefined) {
+        setPatientDocuments(patientDocumentsRes);
+      }
+    }
+
+    if (!isLoadingMyDocuments) {
+      if (myDocumentsRes !== undefined) {
+        setMyDocs(myDocumentsRes);
+      }
+    }
+  });
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -92,13 +71,17 @@ export default function DocumentsPage() {
 
   // Filter documents based on search query
   const filteredModelDocs = modelDocuments.filter((doc) =>
-    doc.name.toLowerCase().includes(searchQuery.toLowerCase())
+    doc.filename.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const filteredPatientDocs = patientDocuments.filter(
     (doc) =>
-      doc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doc.patient?.toLowerCase().includes(searchQuery.toLowerCase())
+      doc.filename.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      doc.owner_id?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const filteredMyDocs = myDocs.filter((doc) =>
+    doc.filename.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -150,6 +133,19 @@ export default function DocumentsPage() {
                       )}
                       Pacientes
                     </Button>
+
+                    <Button
+                      variant={activeFolder === "my" ? "default" : "ghost"}
+                      className={`w-full justify-start gap-3 ${activeFolder === "my" ? "bg-mint-500 hover:bg-mint-600 text-white" : ""}`}
+                      onClick={() => setActiveFolder("my")}
+                    >
+                      {activeFolder === "my" ? (
+                        <FolderOpen size={18} />
+                      ) : (
+                        <Folder size={18} />
+                      )}
+                      Meus uploads
+                    </Button>
                   </nav>
                 </CardContent>
               </Card>
@@ -189,17 +185,28 @@ export default function DocumentsPage() {
               </Card>
 
               {/* Display appropriate folder content */}
-              {activeFolder === "models" ? (
+              {activeFolder === "models" && (
                 <DocumentFolder
                   title="Modelos"
                   description="Documentos modelos para uso com pacientes"
                   documents={filteredModelDocs}
                 />
-              ) : (
+              )}
+
+              {activeFolder === "patients" && (
                 <DocumentFolder
                   title="Pacientes"
                   description="Documentos enviados por ou para pacientes"
                   documents={filteredPatientDocs}
+                  showPatientColumn
+                />
+              )}
+
+              {activeFolder === "my" && (
+                <DocumentFolder
+                  title="Meus uploads"
+                  description="Documentos enviados por mim"
+                  documents={filteredMyDocs}
                   showPatientColumn
                 />
               )}
