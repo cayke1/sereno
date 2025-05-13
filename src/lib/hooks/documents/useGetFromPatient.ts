@@ -28,7 +28,7 @@ export function useGetFromPatient() {
     }, []);
     
     return useQuery({
-        queryKey: ["patients"],
+        queryKey: ["patients_docs"],
         queryFn: () => getFromPatient(token!),
         enabled: !!token,
         meta: {

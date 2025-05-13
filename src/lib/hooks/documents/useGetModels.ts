@@ -1,3 +1,4 @@
+import { queryKeys } from "@/lib/queryKeys";
 import { DocumentType } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -46,7 +47,7 @@ export function useGetModels(category?: string) {
   }, []);
 
   return useQuery({
-    queryKey: ["models", category],
+    queryKey: [queryKeys.document.models, category],
     queryFn: () => getModels(token!, category),
     enabled: !!token,
     meta: {

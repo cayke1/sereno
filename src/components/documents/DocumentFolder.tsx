@@ -18,6 +18,7 @@ import { FileText } from "lucide-react";
 import { formatDate } from "@/lib/formatDate";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
+import { useDeleteDocument } from "@/lib/hooks/documents/mutation/delete";
 
 interface Document {
   id: string;
@@ -42,21 +43,16 @@ export function DocumentFolder({
   documents,
   showPatientColumn = false,
 }: DocumentFolderProps) {
+  const deleteMutation = useDeleteDocument();
   const handleDelete = async (id: string) => {
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/document/${id}`;
-    const response = await fetch(url, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-      },
-    });
-
-    if (!response.ok) {
-      toast.error("Falha ao excluir o documento");
-      return;
+    try {
+      const res = await deleteMutation.mutateAsync(id);
+      if (res instanceof Error) throw res;
+      toast.success("Documento excluído com sucesso");
+    } catch (error) {
+      console.log(error);
+      toast.error("Erro ao excluir o documento");
     }
-
-    toast.success("Documento excluído com sucesso");
   };
   return (
     <Card>

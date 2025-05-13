@@ -9,4 +9,9 @@ export const queryKeys = {
   feelings: {
     all: ["feelings"],
   },
+  document: {
+    my: ["document", "my"],
+    patients: ["document", "patients"],
+    models: ["document", "models"],
+  },
 };

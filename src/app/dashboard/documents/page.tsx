@@ -19,17 +19,14 @@ export default function DocumentsPage() {
   const {
     data,
     isLoading: isLoadingModels,
-    error: errorModels,
   } = useGetModels();
   const {
     data: patientDocumentsRes,
     isLoading: isLoadingPatientDocuments,
-    error: errorPatientDocuments,
   } = useGetFromPatient();
   const {
     data: myDocumentsRes,
     isLoading: isLoadingMyDocuments,
-    error: errorMyDocuments,
   } = useGetMy();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFolder, setActiveFolder] = useState("models");
@@ -58,7 +55,7 @@ export default function DocumentsPage() {
         setMyDocs(myDocumentsRes);
       }
     }
-  });
+  }, [data, patientDocumentsRes, myDocumentsRes]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);

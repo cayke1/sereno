@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { GetModelsResponse } from "./useGetModels";
 import { useQuery } from "@tanstack/react-query";
+import { queryKeys } from "@/lib/queryKeys";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 async function getMy(token: string): Promise<GetModelsResponse[]> {
@@ -27,7 +28,7 @@ export function useGetMy() {
   }, []);
 
   return useQuery({
-    queryKey: ["my"],
+    queryKey: [queryKeys.document.my],
     queryFn: () => getMy(token!),
     enabled: !!token,
     meta: {
