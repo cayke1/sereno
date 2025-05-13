@@ -19,6 +19,7 @@ import { formatDate } from "@/lib/formatDate";
 import { toast } from "sonner";
 import { useDeleteDocument } from "@/lib/hooks/documents/mutation/delete";
 import { User } from "@prisma/client";
+import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
 
 interface Document {
   id: string;
@@ -110,12 +111,7 @@ export function DocumentFolder({
                         Baixar
                       </a>
 
-                      <a
-                        className="text-red-600 hover:text-red-800"
-                        onClick={() => handleDelete(doc.id)}
-                      >
-                        Excluir
-                      </a>
+                      <ConfirmDeleteModal doc_id={doc.id} handleDelete={handleDelete}/>
                     </div>
                   </TableCell>
                 </TableRow>
