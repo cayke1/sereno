@@ -16,9 +16,9 @@ import {
 } from "@/components/ui/table";
 import { FileText } from "lucide-react";
 import { formatDate } from "@/lib/formatDate";
-import { Button } from "../ui/button";
 import { toast } from "sonner";
 import { useDeleteDocument } from "@/lib/hooks/documents/mutation/delete";
+import { User } from "@prisma/client";
 
 interface Document {
   id: string;
@@ -26,7 +26,7 @@ interface Document {
   mimeType: string;
   size?: string;
   createdAt: string;
-  owner?: any;
+  owner?: User;
   url: string;
 }
 
