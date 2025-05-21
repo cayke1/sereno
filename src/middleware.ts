@@ -4,8 +4,6 @@ import type { NextRequest } from "next/server";
 
 const PUBLIC_ROUTES = [
   "/",
-  "/auth/login",
-  "/auth/register",
   "/privacy-policy",
   "/terms",
   "/forgot-password",
@@ -23,7 +21,7 @@ export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const userRole = req.cookies.get("user_role")?.value;
 
-  if (pathname.startsWith("/invite-link")) {
+  if (pathname.startsWith("/invite-link") || pathname.startsWith("/auth")) {
     return NextResponse.next();
   }
 

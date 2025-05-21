@@ -11,33 +11,47 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Logo from "@/components/ui/Logo";
+import { authService } from "@/lib/services/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Mail } from "lucide-react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 const forgotPassSchema = z.object({
-  email: z.string().email({ message: "Email inválido" }),
+  password: z
+    .string()
+    .min(8, { message: "Senha deve ter pelo menos 8 caracteres" }),
 });
 
 type ForgotPassFormValues = z.infer<typeof forgotPassSchema>;
 
-export default function ForgotPassword() {
+export default function ResetPassword() {
+  const { token } = useParams();
   const form = useForm<ForgotPassFormValues>({
     resolver: zodResolver(forgotPassSchema),
     defaultValues: {
-      email: "",
+      password: "",
     },
   });
 
-  const onSubmit = (data: ForgotPassFormValues) => {
-    console.log("Login attempt:", data);
-    toast.success("Login realizado", {
-      description: "Você foi autenticado com sucesso.",
-    });
-    // Here you would typically handle authentication
+  const onSubmit = async (data: ForgotPassFormValues) => {
+    if (!token) {
+      toast.error("Token inválido");
+      return;
+    }
+    const req = await authService.resetPassword(
+      token.toString(),
+      data.password
+    );
+    if (req) {
+      toast.success("Email de recuperação enviado com sucesso!");
+    } else {
+      toast.error("Erro ao enviar email de recuperação");
+    }
+    form.reset();
   };
 
   return (
@@ -56,15 +70,16 @@ export default function ForgotPassword() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
-                name="email"
+                name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Senha</FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Input
-                          placeholder="seu@email.com"
+                          placeholder="********"
                           {...field}
+                          type="password"
                           className="pl-10"
                         />
                         <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -79,7 +94,7 @@ export default function ForgotPassword() {
                 type="submit"
                 className="w-full bg-mint-500 hover:bg-mint-600"
               >
-                Enviar Email de Recuperação
+                Redefinir Senha
               </Button>
             </form>
           </Form>

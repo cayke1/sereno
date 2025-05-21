@@ -108,4 +108,50 @@ export const authService = {
       throw error;
     }
   },
+
+  async forgotPassword(email: string): Promise<boolean> {
+    try {
+      const response = await fetch(`${API_URL}/auth/forgot-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(
+          error.message || "Falha ao enviar email de recuperação"
+        );
+      }
+
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  },
+
+  async resetPassword(token: string, password: string): Promise<boolean> {
+    try {
+      const response = await fetch(`${API_URL}/auth/reset-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token, password }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Falha ao redefinir senha");
+      }
+
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  },
 };
