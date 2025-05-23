@@ -1,9 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
-interface ResponseGetAllPatients {
+export interface ResponseGetAllPatients {
   id: string;
   name: string;
+  email: string;
+  createdAt: string | Date;
   lastSession: string;
   nextSession: string;
   emotionScore: number;

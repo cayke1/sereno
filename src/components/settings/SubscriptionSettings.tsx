@@ -132,7 +132,7 @@ export function SubscriptionSettings({
                         Próxima cobrança
                       </span>
                       <span className="font-medium">
-                        {formatDate(subscription.createdAt)}
+                        {formatDate({date: subscription.createdAt})}
                       </span>
                     </div>
                     <div className="flex justify-between">

@@ -1,21 +1,30 @@
-export function formatDate(date: string | Date) {
-  const options: Intl.DateTimeFormatOptions = {
+interface FormatDateProps {
+  date: string | Date;
+  showHours?: boolean;
+}
+
+
+// Alternative simpler approach using toLocaleDateString
+export function formatDate({ date, showHours = true }: FormatDateProps) {
+  const dateObj = new Date(date);
+  
+  const dateOptions: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
+  };
+  
+  const timeOptions: Intl.DateTimeFormatOptions = {
     hour: "2-digit",
     minute: "2-digit",
   };
-
-  const dateTimeFormat = new Intl.DateTimeFormat("pt-BR", options);
-  const parts = dateTimeFormat.formatToParts(new Date(date));
-
-  const formattedDate = parts
-    .map((part) => part.value)
-    .join("")
-    .replace(",", "")
-    .replace(/\s+/g, " • ")
-    .trim();
-
+  
+  const formattedDate = dateObj.toLocaleDateString("pt-BR", dateOptions);
+  
+  if (showHours) {
+    const formattedTime = dateObj.toLocaleTimeString("pt-BR", timeOptions);
+    return `${formattedDate} • ${formattedTime}`;
+  }
+  
   return formattedDate;
 }

@@ -97,7 +97,7 @@ export function DocumentFolder({
                     <TableCell> </TableCell>
                   )}
                   <TableCell>{doc.size}</TableCell>
-                  <TableCell>{formatDate(doc.createdAt)}</TableCell>
+                  <TableCell>{formatDate({date: doc.createdAt})}</TableCell>
 
                   <TableCell>
                     <div className="flex flex-col gap-2 justify-end">

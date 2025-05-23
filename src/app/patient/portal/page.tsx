@@ -548,7 +548,7 @@ export default function PatientPortal() {
                             <div className="flex justify-between items-start">
                               <div>
                                 <p className="text-sm text-muted-foreground">
-                                  {formatDate(record.createdAt)}
+                                  {formatDate({date: record.createdAt})}
                                 </p>
                                 <div className="flex items-center gap-2 my-1">
                                   <h4 className="font-medium">
