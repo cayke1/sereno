@@ -31,24 +31,24 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function Login() {
-  const { push: redirect } = useRouter();
-  const { login, user } = useAuth();
+  const router = useRouter();
+  const { login, user, isLoading } = useAuth();
   const [loading, setIsLoading] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    if (user) {
-      if (user.role === "PATIENT") {
-        redirect("/patient/portal");
-      }
-      if (user.role === "PROFESSIONAL") {
-        redirect("/dashboard");
-      }
-    } else {
-      setIsLoading(false);
+    setIsLoading(isLoading);
+    if (isLoading) {
+      return;
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+    if (!user) return;
+    if (user.role === "PATIENT") {
+      router.push("/patient/portal");
+    }
+    if (user.role === "PROFESSIONAL") {
+      router.push("/dashboard");
+    }
+  }, [user, isLoading]);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),

@@ -133,13 +133,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         );
 
         toast.success("Usuário logado com sucesso!");
-        if (user && user.role === "PROFESSIONAL") {
+        if (response && response.role === "PROFESSIONAL") {
           if (!response.plan) {
             router.push("/dashboard/select-plan");
           } else {
             router.push("/dashboard");
           }
-        } else if (user && user.role === "PATIENT") {
+        } else if (response && response.role === "PATIENT") {
           router.push("/patient/portal");
         }
       } else {
