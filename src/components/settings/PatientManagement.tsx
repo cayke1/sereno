@@ -27,12 +27,12 @@ import {
   ResponseGetAllPatients,
   useGetPatients,
 } from "@/lib/hooks/professional-report/useGetPatients";
+import { professionalPatientService } from "@/lib/services/professional/patient";
 
 export function PatientManagement() {
   const [searchQuery, setSearchQuery] = useState("");
   const { data, isLoading } = useGetPatients();
   const [patients, setPatients] = useState<ResponseGetAllPatients[] | null>();
-  console.log(data);
 
   useEffect(() => {
     if (isLoading) return;
@@ -43,17 +43,19 @@ export function PatientManagement() {
   const [patientToRemove, setPatientToRemove] =
     useState<ResponseGetAllPatients | null>(null);
 
-  const handleRemovePatient = () => {
+  const handleRemovePatient = async () => {
     if (patientToRemove) {
-      // In a real app, this would call your backend to remove access
-      toast.success("Paciente removido", {
-        description: `${patientToRemove.name} foi removido da sua lista de pacientes.`,
-      });
+      const removePatientRequest =
+        await professionalPatientService.unlinkPatient(patientToRemove.email);
+      if (removePatientRequest.message) {
+        toast.success("Paciente removido", {
+          description: `${patientToRemove.name} foi removido da sua lista de pacientes.`,
+        });
+      }
       setPatientToRemove(null);
     }
   };
 
-  // Filter patients based on search query
   const filteredPatients =
     patients &&
     patients.filter((patient) => {
