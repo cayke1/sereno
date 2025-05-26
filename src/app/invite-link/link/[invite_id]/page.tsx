@@ -2,7 +2,6 @@
 import { Button } from "@/components/ui/button";
 import Logo from "@/components/ui/Logo";
 import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import Footer from "@/components/layout/Footer";
 import { useGetInvite } from "@/lib/hooks/invite/useGetInvite";
@@ -12,21 +11,15 @@ import { toast } from "sonner";
 export default function LinkPage() {
   const router = useRouter();
   const { invite_id } = useParams();
+  const { data: invite, isLoading } = useGetInvite(invite_id!.toString());
 
-  if (!invite_id) {
+  if (!invite_id || !invite || isLoading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center">
-        <h1 className="text-2xl font-semibold">
-          ID do profissional não encontrado
-        </h1>
-        <Link href="/" className="mt-4 text-mint-500 hover:text-mint-700">
-          Página inicial
-        </Link>
+        <LoadingScreen />
       </div>
     );
   }
-
-  const { data: invite, isLoading } = useGetInvite(invite_id!.toString());
 
   const handleAcceptInvite = async () => {
     if (!invite) return;
@@ -40,6 +33,7 @@ export default function LinkPage() {
         description: "Você será redirecionado para o cadastro.",
       });
     } catch (error) {
+      console.error("Erro ao aceitar convite:", error);
       toast.error("Erro ao aceitar convite", {
         description:
           "Não foi possível aceitar o convite. Tente novamente mais tarde.",
@@ -61,6 +55,7 @@ export default function LinkPage() {
       });
       router.push("/patient/portal");
     } catch (error) {
+      console.error("Erro ao recusar convite:", error);
       toast.error("Erro ao recusar convite", {
         description:
           "Não foi possível recusar o convite. Tente novamente mais tarde.",

@@ -16,18 +16,10 @@ import { useGetFromPatient } from "@/lib/hooks/documents/useGetFromPatient";
 import { useGetMy } from "@/lib/hooks/documents/useGetMy";
 
 export default function DocumentsPage() {
-  const {
-    data,
-    isLoading: isLoadingModels,
-  } = useGetModels();
-  const {
-    data: patientDocumentsRes,
-    isLoading: isLoadingPatientDocuments,
-  } = useGetFromPatient();
-  const {
-    data: myDocumentsRes,
-    isLoading: isLoadingMyDocuments,
-  } = useGetMy();
+  const { data, isLoading: isLoadingModels } = useGetModels();
+  const { data: patientDocumentsRes, isLoading: isLoadingPatientDocuments } =
+    useGetFromPatient();
+  const { data: myDocumentsRes, isLoading: isLoadingMyDocuments } = useGetMy();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFolder, setActiveFolder] = useState("models");
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -55,7 +47,14 @@ export default function DocumentsPage() {
         setMyDocs(myDocumentsRes);
       }
     }
-  }, [data, patientDocumentsRes, myDocumentsRes]);
+  }, [
+    data,
+    patientDocumentsRes,
+    myDocumentsRes,
+    isLoadingModels,
+    isLoadingPatientDocuments,
+    isLoadingMyDocuments,
+  ]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
