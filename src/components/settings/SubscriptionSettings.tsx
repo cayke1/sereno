@@ -75,7 +75,7 @@ export function SubscriptionSettings({
     } catch (error: unknown) {
       console.log(error);
     }
-  }, [isLoading]);
+  }, [isLoading, professional_id]);
 
   const handleCancelSubscription = () => {
     // In a real app, this would call your backend to cancel the subscription

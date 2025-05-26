@@ -31,7 +31,8 @@ interface AuthContextType {
     name: string,
     email: string,
     password: string,
-    professional_id: string
+    professional_id: string,
+    invite_id: string
   ) => Promise<void>;
 }
 
@@ -194,7 +195,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     name: string,
     email: string,
     password: string,
-    professional_id: string
+    professional_id: string,
+    invite_id: string
   ) => {
     try {
       setIsLoading(true);
@@ -204,6 +206,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         password,
         professional_id,
         role: "PATIENT",
+        invite_id,
       });
 
       afterLogin(response);

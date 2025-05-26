@@ -14,6 +14,7 @@ interface RegisterCredentials {
 
 interface RegisterPatientCredentials extends RegisterCredentials {
   professional_id: string;
+  invite_id: string;
 }
 export interface AuthResponse {
   access_token: string;

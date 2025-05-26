@@ -1,5 +1,13 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { Eye, EyeOff, LogIn, Mail, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -13,15 +21,10 @@ import {
 import { Input } from "@/components/ui/input";
 import Logo from "@/components/ui/Logo";
 import { toast } from "sonner";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff, Loader, LogIn, Mail, User } from "lucide-react";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { useParams } from "next/navigation";
-import { useGetUser } from "@/lib/hooks/user/useGetUser";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
+
 import { useAuth } from "@/lib/contexts/auth-context";
+import { useGetInvite } from "@/lib/hooks/invite/useGetInvite";
 
 const registerSchema = z.object({
   name: z.string().min(2, { message: "Nome deve ter pelo menos 2 caracteres" }),
@@ -33,49 +36,23 @@ const registerSchema = z.object({
     message: "Você precisa aceitar os termos para continuar",
   }),
   professional_id: z.string(),
-  role: z.enum(["PATIENT", "PROFESSIONAL"]),
+  invite_id: z.string(),
+  role: z.literal("PATIENT"),
 });
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function Register() {
   const { registerPatient, user: loggedUser } = useAuth();
-  const { professional_id } = useParams();
+  const { invite_id } = useParams();
   const [showPassword, setShowPassword] = useState(false);
-  useEffect(() => {
-    if (loggedUser) {
-      toast.success("Login realizado", {
-        description: "Você já está autenticado.",
-      });
-      // Redirect to the dashboard or home page
-      if (loggedUser.role === "PATIENT") {
-        window.location.href = "/patient/portal";
-      } else {
-        window.location.href = "/dashboard";
-      }
-    }
-  });
-
-  if (!professional_id) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center">
-        <h1 className="text-2xl font-semibold">
-          ID do profissional não encontrado
-        </h1>
-        <Link href="/" className="mt-4 text-mint-500 hover:text-mint-700">
-          Página inicial
-        </Link>
-      </div>
-    );
-  }
 
   const {
-    data: user,
+    data: invite,
     isLoading,
     error,
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-  } = useGetUser(professional_id?.toString());
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+  } = useGetInvite(invite_id!.toString());
+
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -83,23 +60,44 @@ export default function Register() {
       email: "",
       password: "",
       termsAccepted: false,
-      professional_id: professional_id!.toString(),
+      professional_id: "",
       role: "PATIENT",
+      invite_id: "",
     },
   });
 
+  // Preenche o formulário com dados do convite
+  useEffect(() => {
+    if (invite) {
+      form.reset({
+        name: "",
+        email: invite.sent_to ?? "",
+        password: "",
+        termsAccepted: false,
+        professional_id: invite.professional?.id ?? "",
+        role: "PATIENT",
+        invite_id: invite.id ?? "",
+      });
+    }
+  }, [invite, form]);
+
+  useEffect(() => {
+    if (loggedUser) {
+      toast.success("Login realizado", {
+        description: "Você já está autenticado.",
+      });
+      const redirectPath =
+        loggedUser.role === "PATIENT" ? "/patient/portal" : "/dashboard";
+      window.location.href = redirectPath;
+    }
+  }, [loggedUser]);
+
   const onSubmit = async (data: RegisterFormValues) => {
     try {
-      await registerPatient(
-        data.name,
-        data.email,
-        data.password,
-        data.professional_id
-      );
+      await registerPatient(data.name, data.email, data.password, data.professional_id, data.invite_id);
       toast.success("Cadastro realizado", {
         description: "Você foi registrado com sucesso.",
       });
-      // Here you would typically handle registration
     } catch (error: unknown) {
       console.error(error);
       toast.error("Falha ao realizar cadastro", {
@@ -108,13 +106,15 @@ export default function Register() {
     }
   };
 
-  return isLoading || error ? (
-    <div className="w-full h-[100vh] flex items-center justify-center">
-      <div>
-        <Loader className="animate-spin h-10 w-10 text-mint-500" />
+  if (isLoading || error || !invite) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        <LoadingScreen />
       </div>
-    </div>
-  ) : (
+    );
+  }
+
+  return (
     <div className="min-h-screen flex flex-col">
       <div className="container max-w-lg mx-auto flex-1 flex flex-col items-center justify-center px-4 py-12">
         <div className="w-full bg-white rounded-lg shadow-md p-6 md:p-8 border border-border">
@@ -125,17 +125,23 @@ export default function Register() {
           <h1 className="text-2xl font-semibold text-center mb-6 gradient-heading">
             Criar Conta
           </h1>
-          <h2>
-            Convite enviado por: {user?.name} <br />
-            <span className="text-mint-500 font-semibold">{user?.email}</span>
+
+          <h2 className="text-center text-muted-foreground text-sm mb-6">
+            Convite enviado por: <strong>{invite.professional?.name}</strong>
+            <br />
+            <span className="text-mint-500 font-semibold">
+              {invite.professional?.email}
+            </span>
           </h2>
+
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              {/* Nome */}
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
-                  <FormItem className="mt-5">
+                  <FormItem>
                     <FormLabel>Nome</FormLabel>
                     <FormControl>
                       <div className="relative">
@@ -152,6 +158,7 @@ export default function Register() {
                 )}
               />
 
+              {/* Email */}
               <FormField
                 control={form.control}
                 name="email"
@@ -173,6 +180,7 @@ export default function Register() {
                 )}
               />
 
+              {/* Senha */}
               <FormField
                 control={form.control}
                 name="password"
@@ -207,6 +215,7 @@ export default function Register() {
                 )}
               />
 
+              {/* Aceite de Termos */}
               <FormField
                 control={form.control}
                 name="termsAccepted"

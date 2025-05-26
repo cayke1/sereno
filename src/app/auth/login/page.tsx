@@ -48,7 +48,7 @@ export default function Login() {
     if (user.role === "PROFESSIONAL") {
       router.push("/dashboard");
     }
-  }, [user, isLoading]);
+  }, [user, isLoading, router]);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),

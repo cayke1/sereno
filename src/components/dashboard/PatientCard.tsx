@@ -121,7 +121,7 @@ export function PatientCard({ patient }: PatientCardProps) {
               </div>
               <p className="text-sm font-medium truncate">
                 {patient.nextSession
-                  ? formatDate(patient.nextSession)
+                  ? formatDate({ date: patient.nextSession, showHours: true })
                   : "Não agendada"}
               </p>
             </div>
