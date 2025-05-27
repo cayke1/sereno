@@ -15,17 +15,19 @@ interface User {
   plan?: string;
 }
 
+interface RegisterSchema {
+  name: string;
+  email: string;
+  password: string;
+  role: "PATIENT" | "PROFESSIONAL";
+}
+
 interface AuthContextType {
   user: User | null;
   token: string | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (
-    name: string,
-    email: string,
-    password: string,
-    role: "PATIENT" | "PROFESSIONAL"
-  ) => Promise<void>;
+  register: (data: RegisterSchema) => Promise<void>;
   logout: () => void;
   registerPatient: (
     name: string,
@@ -165,12 +167,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const register = async (
-    name: string,
-    email: string,
-    password: string,
-    role: "PATIENT" | "PROFESSIONAL"
-  ) => {
+  const register = async ({ name, email, password, role }: RegisterSchema) => {
     try {
       setIsLoading(true);
       const response = await authService.register({
@@ -179,6 +176,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         password,
         role,
       });
+
+      console.log(response);
 
       await afterLogin(response);
     } catch (error) {

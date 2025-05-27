@@ -73,6 +73,7 @@ export const authService = {
 
       return await response.json();
     } catch (error) {
+      console.log(error);
       if (error instanceof Error) {
         toast.error(error.message);
       } else {

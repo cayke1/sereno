@@ -52,11 +52,10 @@ export default function Register() {
 
   const onSubmit = async (data: RegisterFormValues) => {
     try {
-      await register(data.name, data.email, data.password, data.role);
+      await register(data);
     } catch (error) {
       console.error(error);
     }
-    // Here you would typically handle registration
   };
 
   const handleSelectRole = (role: string) => {
