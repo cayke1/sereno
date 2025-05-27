@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 interface SubscriptionContextType {
   isLoading: boolean;
   handleCheckout(plan: "basic" | "unlimited"): Promise<void>;
+  handleCancel(professional_id: string): Promise<boolean>;
 }
 
 const SubscriptionContext = createContext<SubscriptionContextType | undefined>(
@@ -18,8 +19,8 @@ export function SubscriptionProvider({
 }: {
   children: React.ReactNode;
 }) {
-    const [isLoading, setIsLoading] = useState(false);
-    const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleCheckout = async (plan: "basic" | "unlimited") => {
     setIsLoading(true);
@@ -37,8 +38,15 @@ export function SubscriptionProvider({
     }
   };
 
+  const handleCancel = async (professional_id: string) => {
+    const req = await subscriptionService.cancel(professional_id);
+    return req;
+  };
+
   return (
-    <SubscriptionContext.Provider value={{ isLoading, handleCheckout }}>
+    <SubscriptionContext.Provider
+      value={{ isLoading, handleCheckout, handleCancel }}
+    >
       {children}
     </SubscriptionContext.Provider>
   );

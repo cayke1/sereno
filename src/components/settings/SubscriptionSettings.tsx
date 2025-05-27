@@ -24,6 +24,7 @@ import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { LoadingScreen } from "../ui/LoadingScreen";
 import { Plan, plans } from "../home/Pricing";
+import { useSubscription } from "@/lib/contexts/subscription-context";
 
 interface SubscriptionSettingsProps {
   professional_id: string;
@@ -40,6 +41,7 @@ interface Subscription {
 export function SubscriptionSettings({
   professional_id,
 }: SubscriptionSettingsProps) {
+  const { handleCancel } = useSubscription();
   const [isLoading, setIsLoading] = useState(true);
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [plan, setPlan] = useState<Plan | null>();
@@ -77,12 +79,16 @@ export function SubscriptionSettings({
     }
   }, [isLoading, professional_id]);
 
-  const handleCancelSubscription = () => {
-    // In a real app, this would call your backend to cancel the subscription
-    toast.success("Cancelamento solicitado", {
-      description:
-        "Você pode continuar usando o serviço até o fim do período pago.",
-    });
+  const handleCancelSubscription = async () => {
+    const request = await handleCancel(professional_id);
+    if (request) {
+      toast.success("Cancelamento solicitado", {
+        description:
+          "Você pode continuar usando o serviço até o fim do período pago.",
+      });
+      return;
+    }
+    toast.error("Falha ao solicitar cancelamento");
   };
 
   const handleUpdatePayment = () => {
@@ -132,7 +138,7 @@ export function SubscriptionSettings({
                         Próxima cobrança
                       </span>
                       <span className="font-medium">
-                        {formatDate({date: subscription.createdAt})}
+                        {formatDate({ date: subscription.createdAt })}
                       </span>
                     </div>
                     <div className="flex justify-between">

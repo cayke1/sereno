@@ -3,7 +3,7 @@ import { toast } from "sonner";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 interface CheckoutResponse {
-    checkout_url: string;
+  checkout_url: string;
 }
 export const subscriptionService = {
   async checkout(plan: "basic" | "unlimited"): Promise<CheckoutResponse> {
@@ -30,6 +30,29 @@ export const subscriptionService = {
         toast.error("Ocorreu um erro durante o login");
       }
       throw error;
+    }
+  },
+
+  async cancel(professional_id: string): Promise<boolean> {
+    try {
+      const req = await fetch(
+        `${API_URL}/subscription/cancel/${professional_id}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+
+      if (!req.ok) {
+        throw new Error("Failed to cancel subscription");
+      }
+
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
     }
   },
 };
