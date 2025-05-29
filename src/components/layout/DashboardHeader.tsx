@@ -6,6 +6,7 @@ import { Logo } from "@/components/ui/Logo";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/lib/contexts/auth-context";
+import { NotificationBell } from "../notifications/NotificationBell";
 
 export function DashboardHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -90,6 +91,8 @@ export function DashboardHeader() {
                 </Link>
               </li>
             ))}
+
+            <NotificationBell userId={user?.id || ""} />
           </ul>
         </nav>
 
