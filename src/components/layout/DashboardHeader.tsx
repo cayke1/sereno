@@ -1,12 +1,15 @@
 "use client";
 import React, { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Bell, Menu, Settings, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/ui/Logo";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/lib/contexts/auth-context";
 import { NotificationBell } from "../notifications/NotificationBell";
+import { UserDropdown } from "./UserDropdown";
+import { Badge } from "../ui/badge";
+import { useNotifications } from "@/lib/hooks/notifications/useNotifications";
 
 export function DashboardHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -17,16 +20,13 @@ export function DashboardHeader() {
     pathname: path,
     hash: hash,
   };
-  const defaultNavItems = [
+  const { unreadCount } = useNotifications(user?.id || "");
+
+  let customNavItems: { name: string; href: string }[] = [
     {
-      name: "Sair",
-      href: "/logout",
+      name: "Início",
+      href: "/",
     },
-  ];
-  let customNavItems = [
-    { name: "Recursos", href: "/#features" },
-    { name: "Sobre", href: "/#about" },
-    { name: "Configurações", href: "/dashboard/config" },
   ];
 
   if (user) {
@@ -36,10 +36,6 @@ export function DashboardHeader() {
           name: "Início",
           href: "/patient/portal",
         },
-        {
-          name: "Configurações",
-          href: "/patient/portal/settings",
-        },
       ];
     } else {
       customNavItems = [
@@ -47,19 +43,9 @@ export function DashboardHeader() {
           name: "Início",
           href: "/dashboard",
         },
-        {
-          name: "Documentos",
-          href: "/dashboard/documents",
-        },
-        {
-          name: "Configurações",
-          href: "/dashboard/settings",
-        },
       ];
     }
   }
-
-  const navItems = customNavItems.concat(defaultNavItems);
 
   const isActive = (path: string) => {
     if (path.includes("#")) {
@@ -79,20 +65,8 @@ export function DashboardHeader() {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8">
           <ul className="flex space-x-8">
-            {navItems.map((item) => (
-              <li key={item.name}>
-                <Link
-                  href={item.href}
-                  className={`text-sm font-medium transition-colors hover:text-mint-600 ${
-                    isActive(item.href) ? "text-mint-600" : "text-foreground/80"
-                  }`}
-                >
-                  {item.name}
-                </Link>
-              </li>
-            ))}
-
             <NotificationBell userId={user?.id || ""} />
+            <UserDropdown />
           </ul>
         </nav>
 
@@ -109,21 +83,34 @@ export function DashboardHeader() {
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
         <nav className="md:hidden min-w-60 py-4 px-4 absolute top-16 right-0 bg-white border-b border-border shadow-lg animate-fade-in">
-          <ul className="flex flex-col space-y-4">
-            {navItems.map((item) => (
-              <li key={item.name}>
-                <Link
-                  href={item.href}
-                  className={`block py-2 text-base font-medium transition-colors hover:text-mint-600 ${
-                    isActive(item.href) ? "text-mint-600" : "text-foreground/80"
-                  }`}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <li className="flex flex-col space-y-4">
+            <Button asChild variant="outline" className="w-full justify-start">
+              <Link
+                href="/dashboard/notifications"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Bell size={16} />
+                <span>Notificações</span>
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="w-full justify-start">
+              <Link
+                href="/dashboard/settings"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Settings size={16} />
+                <span>Configurações</span>
+              </Link>
+            </Button>
+            <div className="flex items-center justify-between py-2">
+              <span className="text-sm text-muted-foreground">
+                Notificações não lidas
+              </span>
+              {unreadCount > 0 && (
+                <Badge variant="secondary">{unreadCount}</Badge>
+              )}
+            </div>
+          </li>
         </nav>
       )}
     </header>
