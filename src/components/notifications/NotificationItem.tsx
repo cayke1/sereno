@@ -7,10 +7,12 @@ import { GetNotificationIcon, TYPE_COLORS } from "./GetNotificationIcon";
 
 interface NotificationItemProps {
   notification: NotificationPayload;
+  onClick?: () => void;
 }
 
 export const NotificationItem: React.FC<NotificationItemProps> = ({
   notification,
+  onClick = () => {},
 }) => {
   const iconColor = TYPE_COLORS[notification.type];
 
@@ -19,6 +21,7 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
       href={notification.url}
       target="__blank"
       className="flex items-start justify-between w-full"
+      onClick={onClick}
     >
       <div className="flex-1">
         <div className="flex-shrink-0">

@@ -1,7 +1,7 @@
 "use client";
 import PatientCard from "@/components/dashboard/PatientCard";
 import EmotionChart from "@/components/dashboard/EmotionChart";
-import { Bell, Calendar, Plus, Search, Smile, Users } from "lucide-react";
+import { Calendar, Plus, Search, Smile, Users } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,48 +30,6 @@ interface Patient {
   relationId: string;
 }
 export default function Page() {
-  // const patientsMock = [
-  //   {
-  //     id: "1",
-  //     name: "Rafael Oliveira",
-  //     lastSession: "15 Jun 2023",
-  //     nextSession: "29 Jun 2023",
-  //     avatar: "",
-  //     emotionScore: 85,
-  //     trends: ["up", "up", "stable", "up", "stable"],
-  //     status: "active" as const,
-  //   },
-  //   {
-  //     id: "2",
-  //     name: "Marina Santos",
-  //     lastSession: "12 Jun 2023",
-  //     nextSession: "26 Jun 2023",
-  //     avatar: "",
-  //     emotionScore: 65,
-  //     trends: ["down", "stable", "up", "stable", "up"],
-  //     status: "active" as const,
-  //   },
-  //   {
-  //     id: "3",
-  //     name: "Lucas Mendes",
-  //     lastSession: "18 Jun 2023",
-  //     nextSession: null,
-  //     avatar: "",
-  //     emotionScore: 40,
-  //     trends: ["down", "down", "stable", "down", "up"],
-  //     status: "active" as const,
-  //   },
-  //   {
-  //     id: "4",
-  //     name: "Juliana Costa",
-  //     lastSession: "20 Jun 2023",
-  //     nextSession: "27 Jun 2023",
-  //     avatar: "",
-  //     emotionScore: 75,
-  //     trends: ["stable", "up", "up", "stable", "up"],
-  //     status: "new" as const,
-  //   },
-  // ];
   const [patients, setPatients] = useState<Patient[] | null>(null);
 
   const { data, isLoading } = useGetPatients();
@@ -226,13 +184,7 @@ export default function Page() {
                           />
                         ))}
                       <div className="card-base flex flex-col items-center justify-center min-h-52 border-dashed">
-                        <Button
-                          variant="ghost"
-                          className="text-muted-foreground hover:text-mint-700"
-                        >
-                          <Plus className="h-5 w-5 mr-2" />
-                          Adicionar paciente
-                        </Button>
+                        <ModalInvitePatient variant="secondary" />
                       </div>
                     </div>
                   </CardContent>
@@ -297,89 +249,6 @@ export default function Page() {
                         className="w-full text-mint-700 border-mint-200 hover:bg-mint-50"
                       >
                         Ver todas as sessões
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Notifications */}
-                <Card className="bg-white">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <span>Notificações</span>
-                      <div className="px-2 py-0.5 bg-mint-100 text-mint-700 text-xs rounded-full">
-                        3 novas
-                      </div>
-                    </CardTitle>
-                    <CardDescription>Atualizações recentes</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {[
-                        {
-                          title: "Novo registro emocional",
-                          description:
-                            "Marina Santos registrou uma nova entrada.",
-                          time: "Há 30 minutos",
-                          icon: <Smile className="h-4 w-4 text-sky-500" />,
-                          isNew: true,
-                        },
-                        {
-                          title: "Lembrete de sessão",
-                          description:
-                            "Você tem uma sessão com Rafael amanhã às 14h.",
-                          time: "Há 2 horas",
-                          icon: <Calendar className="h-4 w-4 text-mint-500" />,
-                          isNew: true,
-                        },
-                        {
-                          title: "Relatório semanal disponível",
-                          description:
-                            "O relatório de Lucas Mendes está disponível.",
-                          time: "Há 5 horas",
-                          icon: <Bell className="h-4 w-4 text-sand-700" />,
-                          isNew: true,
-                        },
-                        {
-                          title: "Paciente atualizado",
-                          description:
-                            "Você atualizou os dados de Juliana Costa.",
-                          time: "Ontem",
-                          icon: (
-                            <Users className="h-4 w-4 text-muted-foreground" />
-                          ),
-                          isNew: false,
-                        },
-                      ].map((notification, index) => (
-                        <div
-                          key={index}
-                          className={`p-3 rounded-lg ${
-                            notification.isNew
-                              ? "bg-mint-50 border border-mint-100"
-                              : "bg-muted/20 border border-border"
-                          }`}
-                        >
-                          <div className="flex items-start gap-3">
-                            <div className="mt-0.5">{notification.icon}</div>
-                            <div>
-                              <p className="font-medium text-sm">
-                                {notification.title}
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                {notification.description}
-                              </p>
-                              <p className="text-xs text-muted-foreground mt-1">
-                                {notification.time}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                      <Button
-                        variant="outline"
-                        className="w-full text-mint-700 border-mint-200 hover:bg-mint-50"
-                      >
-                        Ver todas as notificações
                       </Button>
                     </div>
                   </CardContent>

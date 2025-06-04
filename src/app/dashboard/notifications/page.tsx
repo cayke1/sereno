@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Bell, Check, Trash2, Filter } from "lucide-react";
+import { Bell, Check, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";

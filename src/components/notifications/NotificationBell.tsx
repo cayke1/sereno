@@ -23,7 +23,7 @@ interface NotificationBellProps {
 export const NotificationBell: React.FC<NotificationBellProps> = ({
   userId,
 }) => {
-  const { notifications, loading, markAsRead } = useNotifications(userId);
+  const { notifications, markAsRead } = useNotifications(userId);
   const { unreadCount } = useNotifications(userId);
 
   return (
@@ -54,7 +54,10 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
               key={notification.id}
               className="flex flex-col items-star cursor-pointer"
             >
-              <NotificationItem notification={notification} />
+              <NotificationItem
+                onClick={() => markAsRead(notification.id)}
+                notification={notification}
+              />
             </DropdownMenuItem>
           ))
         )}

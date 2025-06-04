@@ -18,7 +18,7 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { Mail, UserPlus } from "lucide-react";
+import { Mail, Plus, UserPlus } from "lucide-react";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { Input } from "../ui/input";
 import { inviteService } from "@/lib/services/invite";
@@ -28,8 +28,14 @@ const invitePatientSchema = z.object({
   email: z.string().email({ message: "Email inválido" }),
 });
 
+interface ModalInvitePatientProps {
+  variant?: "primary" | "secondary";
+}
+
 type InvitePatientFormValues = z.infer<typeof invitePatientSchema>;
-export function ModalInvitePatient() {
+export function ModalInvitePatient({
+  variant = "primary",
+}: ModalInvitePatientProps) {
   const [open, setOpen] = useState(false);
   const form = useForm<InvitePatientFormValues>({
     resolver: zodResolver(invitePatientSchema),
@@ -54,10 +60,20 @@ export function ModalInvitePatient() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-mint-500 hover:bg-mint-600 text-white">
-          <UserPlus className="h-4 w-4 mr-2" />
-          Novo Paciente
-        </Button>
+        {variant === "primary" ? (
+          <Button className="bg-mint-500 hover:bg-mint-600 text-white">
+            <UserPlus className="h-4 w-4 mr-2" />
+            Novo Paciente
+          </Button>
+        ) : (
+          <Button
+            variant="ghost"
+            className="text-muted-foreground hover:text-mint-700"
+          >
+            <Plus className="h-5 w-5 mr-2" />
+            Adicionar paciente
+          </Button>
+        )}
       </DialogTrigger>
 
       <DialogContent>

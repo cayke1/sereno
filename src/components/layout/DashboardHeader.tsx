@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Bell, Menu, Settings, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/ui/Logo";
-import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/lib/contexts/auth-context";
 import { NotificationBell } from "../notifications/NotificationBell";
@@ -14,12 +13,6 @@ import { useNotifications } from "@/lib/hooks/notifications/useNotifications";
 export function DashboardHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user } = useAuth();
-  const path = usePathname();
-  const hash = path.includes("#") ? path.substring(path.indexOf("#")) : null;
-  const location = {
-    pathname: path,
-    hash: hash,
-  };
   const { unreadCount } = useNotifications(user?.id || "");
 
   let customNavItems: { name: string; href: string }[] = [
@@ -46,16 +39,6 @@ export function DashboardHeader() {
       ];
     }
   }
-
-  const isActive = (path: string) => {
-    if (path.includes("#")) {
-      return (
-        location.pathname === "/" &&
-        location.hash === path.substring(path.indexOf("#"))
-      );
-    }
-    return location.pathname === path;
-  };
 
   return (
     <header className="py-4 px-4 md:px-6 w-full bg-white/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
