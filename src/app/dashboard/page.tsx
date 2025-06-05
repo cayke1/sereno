@@ -18,6 +18,9 @@ import { ModalInvitePatient } from "@/components/dashboard/ModalInvitePatient";
 import { useEffect, useState } from "react";
 import { useGetPatients } from "@/lib/hooks/professional-report/useGetPatients";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { useGetSessions } from "@/lib/hooks/session/useGetSessions";
+import { formatDateSession } from "@/lib/formatDate";
+import { Skeleton } from "@/components/ui/skeleton";
 interface Patient {
   id: string;
   name: string;
@@ -30,20 +33,19 @@ interface Patient {
   relationId: string;
 }
 export default function Page() {
-  const [patients, setPatients] = useState<Patient[] | null>(null);
-
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const { data: session, isLoading: isLoadingSession } = useGetSessions();
+  const [sessions, setSessions] = useState<typeof session>([]);
   const { data, isLoading } = useGetPatients();
   useEffect(() => {
-    if (!isLoading) {
-      if (data !== undefined) {
-        data.map((p) => {
-          if (patients != null) setPatients([...patients, p]);
-          else setPatients([p]);
-        });
-      }
+    if (!isLoading && data) {
+      setPatients(data);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+
+    if (!isLoadingSession && session) {
+      setSessions(session);
+    }
+  }, [isLoading, data, isLoadingSession, session]);
 
   // Mock data for emotion chart
   const emotionData = [
@@ -54,14 +56,6 @@ export default function Page() {
     { date: "29/06", calm: 60, joy: 60, anxiety: 30, sadness: 25 },
     { date: "06/07", calm: 70, joy: 75, anxiety: 20, sadness: 15 },
   ];
-
-  // Mock data for upcoming sessions
-  const upcomingSessions = [
-    { patient: "Rafael Oliveira", date: "29 Jun", time: "14:00" },
-    { patient: "Marina Santos", date: "26 Jun", time: "10:30" },
-    { patient: "Juliana Costa", date: "27 Jun", time: "16:00" },
-  ];
-
   return (
     <div className="flex flex-col min-h-screen">
       <DashboardHeader />
@@ -221,29 +215,49 @@ export default function Page() {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {upcomingSessions.map((session, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center justify-between p-3 rounded-lg bg-mint-50 border border-mint-100"
-                        >
-                          <div>
-                            <p className="font-medium">{session.patient}</p>
-                            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                              <Calendar className="h-3 w-3" />
-                              <span>
-                                {session.date}, {session.time}
-                              </span>
-                            </div>
-                          </div>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0"
+                      {sessions ? (
+                        sessions.map((session, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center justify-between p-3 rounded-lg bg-mint-50 border border-mint-100"
                           >
-                            <Calendar className="h-4 w-4 text-mint-700" />
-                          </Button>
-                        </div>
-                      ))}
+                            <div>
+                              <p className="font-medium">
+                                {session.professionalPatient.patient.name}
+                              </p>
+                              <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                <Calendar className="h-3 w-3" />
+                                <span>
+                                  {formatDateSession(session.startDate)}
+                                </span>
+                              </div>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 w-8 p-0"
+                            >
+                              <Calendar className="h-4 w-4 text-mint-700" />
+                            </Button>
+                          </div>
+                        ))
+                      ) : (
+                        <Skeleton className="animate-pulse">
+                          <div className="flex items-center justify-between p-3 rounded-lg bg-mint-50 border border-mint-100">
+                            <div>
+                              <p className="font-medium"></p>
+                              <div className="flex items-center gap-1 text-sm text-muted-foreground"></div>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 w-8 p-0"
+                            >
+                              <Calendar className="h-4 w-4 text-mint-700" />
+                            </Button>
+                          </div>
+                        </Skeleton>
+                      )}
                       <Button
                         variant="outline"
                         className="w-full text-mint-700 border-mint-200 hover:bg-mint-50"
